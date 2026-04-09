@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Details - Forex Academy</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .course-detail-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        .course-header {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .course-header img {
+            width: 100%;
+            max-height: 400px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .course-price {
+            font-size: 2rem;
+            color: #667eea;
+            font-weight: bold;
+        }
+        .btn-purchase {
+            background: #28a745;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .btn-purchase:hover {
+            background: #218838;
+        }
+        .btn-watch {
+            background: #667eea;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .message {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar">
+    <div class="container">
+        <div class="logo">📈 ForexAcademy</div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="dashboard.html">Dashboard</a>
+            <a href="#" id="logoutBtn">Logout</a>
+        </div>
+    </div>
+</nav>
+
+<div class="course-detail-container">
+    <div id="courseContent">
+        <div class="loading">Loading course details...</div>
+    </div>
+</div>
+
+<script>
+    const API_BASE = '/api';
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+        window.location.href = 'index.html';
+    }
+
+    document.getElementById('logoutBtn').onclick = () => {
+        localStorage.clear();
+        window.location.href = 'index.html';
+    };
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const courseId = urlParams.get('id');
+
+    async function loadCourseDetail() {
+        try {
+            const response = await fetch(`${API_BASE}/courses/public/${courseId}`);
+            const course = await response.json();
+
+            // Check if user has purchased this course
+            const myCoursesResponse = await fetch(`${API_BASE}/courses/my-courses`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            const myCourses = await myCoursesResponse.json();
+            const hasPurchased = myCourses.some(c => c.id === course.id);
+
+            document.getElementById('courseContent').innerHTML = `
+                    <div class="course-header">
+                        <img src="${course.thumbnailUrl || 'https://via.placeholder.com/1200x400?text=Forex+Course'}" alt="${course.title}">
+                        <h1>${course.title}</h1>
+                        <p>${course.description || 'No description available'}</p>
+                        <div class="course-price">$${course.price || 0}</div>
+                        ${hasPurchased ?
+                `<button class="btn-watch" onclick="watchCourse()">▶ Start Watching</button>` :
+                `<button class="btn-purchase" onclick="purchaseCourse(${course.id})">💰 Purchase Course</button>`
+            }
+                        <div id="message"></div>
+                    </div>
+                `;
+        } catch (error) {
+            console.error('Error loading course:', error);
+            document.getElementById('courseContent').innerHTML = '<div class="error">Error loading course details.</div>';
+        }
+    }
+
+    async function purchaseCourse(courseId) {
+        try {
+            const response = await fetch(`${API_BASE}/courses/purchase/${courseId}`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            const result = await response.json();
+            if (response.ok) {
+                document.getElementById('message').innerHTML = '<div class="message success">✅ Course purchased successfully! Redirecting...</div>';
+                setTimeout(() => {
+                    window.location.href = `course-player.html?courseId=${courseId}`;
+                }, 2000);
+            } else {
+                document.getElementById('message').innerHTML = `<div class="message error">❌ ${result.error || 'Purchase failed'}</div>`;
+            }
+        } catch (error) {
+            document.getElementById('message').innerHTML = '<div class="message error">❌ Error purchasing course</div>';
+        }
+    }
+
+    function watchCourse() {
+        window.location.href = `course-player.html?courseId=${courseId}`;
+    }
+
+    loadCourseDetail();
+</script>
+</body>
+</html>
