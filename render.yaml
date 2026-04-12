@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: forex-course-platform
+    runtime: java
+    repo: https://github.com/Ahmedhla/forex-course-platform
+    branch: master
+    buildCommand: ./mvnw clean package -DskipTests
+    startCommand: java -jar target/*.jar
+    envVars:
+      - key: DB_URL
+        value: jdbc:postgresql://dpg-d7d3ldn41pts739pq70g-a/forex_course_db?ssl=true&sslmode=require
+      - key: DB_USERNAME
+        value: forex_user
+      - key: DB_PASSWORD
+        value: t1NNWeRauAF7sKUQEPdjlsxhYKiAOXUR
+      - key: JWT_SECRET
+        value: MySuperSecretKeyForJWT2024ForexPlatform!@#$%^
+      - key: PORT
+        value: 8080

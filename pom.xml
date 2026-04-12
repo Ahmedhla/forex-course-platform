@@ -14,6 +14,7 @@
     <groupId>com.forex</groupId>
     <artifactId>forex-course-platform</artifactId>
     <version>1.0.0</version>
+    <name>Forex Course Platform</name>
 
     <properties>
         <java.version>17</java.version>
@@ -38,10 +39,17 @@
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
 
-        <!-- Database -->
+        <!-- H2 Database for local development -->
         <dependency>
-            <groupId>com.mysql</groupId>
-            <artifactId>mysql-connector-j</artifactId>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- PostgreSQL for production (Render) -->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
             <scope>runtime</scope>
         </dependency>
 
