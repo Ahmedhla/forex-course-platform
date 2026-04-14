@@ -1,11 +1,11 @@
 services:
   - type: web
     name: forex-course-platform
-    runtime: image
+    runtime: java
     repo: https://github.com/Ahmedhla/forex-course-platform
     branch: master
     plan: free
-    buildCommand: chmod +x mvnw && ./mvnw clean package -DskipTests
+    buildCommand: ./mvnw clean package -DskipTests
     startCommand: java -jar target/*.jar
     envVars:
       - key: DB_URL
