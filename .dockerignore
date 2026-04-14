@@ -1,0 +1,8 @@
+.git
+.gitignore
+README.md
+*.log
+target/
+uploads/
+.idea/
+*.iml
