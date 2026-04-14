@@ -1,26 +1,31 @@
-FROM eclipse-temurin:17-jdk-alpine
+# First stage: Build the JAR file using Maven
+FROM maven:3.9-eclipse-temurin-17 AS build
 
 WORKDIR /app
 
-# Copy Maven wrapper and pom.xml
-COPY .mvn .mvn
-COPY mvnw pom.xml ./
+# Copy pom.xml first to cache dependencies
+COPY pom.xml .
+RUN mvn dependency:go-offline -B
 
-# Make mvnw executable
-RUN chmod +x mvnw
+# Copy the rest of the code
+COPY src ./src
 
-# Download dependencies
-RUN ./mvnw dependency:go-offline -B
+# Build the application (skip tests for now)
+RUN mvn clean package -DskipTests
 
-# Copy source code
-COPY src src
+# Second stage: Run the JAR
+FROM eclipse-temurin:17-jre-alpine
 
-# Build the application
-RUN ./mvnw package -DskipTests
+WORKDIR /app
+
+# Copy the built JAR from the first stage
+COPY --from=build /app/target/*.jar app.jar
 
 # Create upload directories
 RUN mkdir -p /app/uploads/videos /app/uploads/thumbnails
 
+# Expose the port
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-jar", "target/*.jar"]
+# Run the application
+ENTRYPOINT ["java", "-jar", "app.jar"]
