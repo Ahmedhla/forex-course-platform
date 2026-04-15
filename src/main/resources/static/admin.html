@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>Admin Panel - Forex Academy</title>
     <style>
         * {
@@ -14,15 +14,17 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: #f5f5f5;
         }
-        .navbar {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            color: white;
-            padding: 1rem 0;
-        }
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 20px;
+        }
+
+        /* Navbar */
+        .navbar {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: white;
+            padding: 1rem 0;
         }
         .navbar .container {
             display: flex;
@@ -33,18 +35,84 @@
             font-size: 1.5rem;
             font-weight: bold;
         }
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
         .nav-links a {
             color: white;
             text-decoration: none;
-            margin-left: 2rem;
         }
         .nav-links a:hover {
             color: #ffd700;
         }
+
+        /* Hamburger */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 10px;
+        }
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background: white;
+            margin: 3px 0;
+            transition: 0.3s;
+            border-radius: 2px;
+        }
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(6px, 6px);
+        }
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(6px, -6px);
+        }
+
+        /* Mobile Menu */
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.95);
+            z-index: 999;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+        }
+        .mobile-menu a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.5rem;
+            padding: 15px;
+        }
+        .close-menu {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-size: 40px;
+            color: white;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+
+        /* Admin Panel Styles */
         .admin-tabs {
             display: flex;
             gap: 10px;
             margin: 20px 0;
+            flex-wrap: wrap;
         }
         .tab-btn {
             padding: 10px 20px;
@@ -52,7 +120,6 @@
             border: none;
             cursor: pointer;
             border-radius: 5px;
-            font-size: 16px;
         }
         .tab-btn.active {
             background: #667eea;
@@ -70,9 +137,8 @@
             align-items: center;
             padding: 15px;
             border-bottom: 1px solid #ddd;
-        }
-        .admin-course-item:hover {
-            background: #f9f9f9;
+            flex-wrap: wrap;
+            gap: 10px;
         }
         .btn-danger {
             background: #dc3545;
@@ -81,9 +147,6 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
-        }
-        .btn-danger:hover {
-            background: #c82333;
         }
         .btn-secondary {
             background: #667eea;
@@ -94,9 +157,6 @@
             cursor: pointer;
             margin-right: 5px;
         }
-        .btn-secondary:hover {
-            background: #5a67d8;
-        }
         .btn-success {
             background: #28a745;
             color: white;
@@ -104,11 +164,6 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 16px;
-            margin-top: 10px;
-        }
-        .btn-success:hover {
-            background: #218838;
         }
         form input, form textarea, form select {
             width: 100%;
@@ -116,7 +171,6 @@
             margin: 10px 0;
             border: 1px solid #ddd;
             border-radius: 5px;
-            font-size: 14px;
         }
         .video-item {
             padding: 10px;
@@ -124,25 +178,24 @@
             background: #f5f5f5;
             border-radius: 5px;
         }
-        .debug-info {
-            background: #f0f0f0;
-            padding: 10px;
-            margin-top: 10px;
-            border-radius: 5px;
-            font-size: 12px;
-            font-family: monospace;
-            white-space: pre-wrap;
-        }
-        h1, h2, h3 {
-            color: #333;
-            margin-bottom: 15px;
-        }
-        .course-info strong {
-            font-size: 16px;
-        }
-        .course-info p {
-            margin-top: 5px;
-            color: #666;
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            .hamburger {
+                display: flex;
+            }
+            .admin-tabs {
+                flex-direction: column;
+            }
+            .tab-btn {
+                width: 100%;
+            }
+            .admin-course-item {
+                flex-direction: column;
+                text-align: center;
+            }
         }
     </style>
 </head>
@@ -154,8 +207,17 @@
             <a href="index.html">Home</a>
             <a href="#" id="logoutBtn">Logout</a>
         </div>
+        <button class="hamburger" id="hamburgerBtn">
+            <span></span><span></span><span></span>
+        </button>
     </div>
 </nav>
+
+<div class="mobile-menu" id="mobileMenu">
+    <button class="close-menu" id="closeMenuBtn">&times;</button>
+    <a href="index.html">Home</a>
+    <a href="#" id="mobileLogoutBtn">Logout</a>
+</div>
 
 <div class="container">
     <h1>Admin Panel</h1>
@@ -165,13 +227,11 @@
         <button class="tab-btn" onclick="showTab('addCourse')">Add New Course</button>
     </div>
 
-    <!-- Manage Courses Tab -->
     <div id="coursesTab" class="tab-content active">
         <h2>All Courses</h2>
         <div id="coursesList">Loading...</div>
     </div>
 
-    <!-- Add Course Tab -->
     <div id="addCourseTab" class="tab-content" style="display:none;">
         <h2>Add New Course</h2>
         <form id="courseForm">
@@ -183,10 +243,7 @@
 
         <div id="videoSection" style="display:none; margin-top: 30px;">
             <h3>Add YouTube Videos to Course</h3>
-            <select id="courseSelect">
-                <option value="">Select a course</option>
-            </select>
-
+            <select id="courseSelect"></select>
             <form id="videoForm">
                 <input type="text" id="videoTitle" placeholder="Video Title" required>
                 <textarea id="videoDesc" placeholder="Video Description" rows="3"></textarea>
@@ -194,9 +251,7 @@
                 <input type="number" id="videoDuration" placeholder="Duration in seconds" step="1">
                 <button type="submit" class="btn-success">Add YouTube Video</button>
             </form>
-
             <div id="videoList"></div>
-            <div id="debugInfo" class="debug-info"></div>
         </div>
     </div>
 </div>
@@ -210,10 +265,42 @@
         window.location.href = 'index.html';
     }
 
-    document.getElementById('logoutBtn').onclick = () => {
+    // Hamburger menu
+    const hamburgerBtn = document.getElementById('hamburgerBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const closeMenuBtn = document.getElementById('closeMenuBtn');
+
+    function closeMobileMenu() {
+        if (hamburgerBtn) hamburgerBtn.classList.remove('active');
+        if (mobileMenu) mobileMenu.style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
+
+    function openMobileMenu() {
+        if (hamburgerBtn) hamburgerBtn.classList.add('active');
+        if (mobileMenu) mobileMenu.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+
+    if (hamburgerBtn) hamburgerBtn.addEventListener('click', openMobileMenu);
+    if (closeMenuBtn) closeMenuBtn.addEventListener('click', closeMobileMenu);
+    if (mobileMenu) {
+        mobileMenu.addEventListener('click', (e) => {
+            if (e.target === mobileMenu) closeMobileMenu();
+        });
+        mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', closeMobileMenu);
+        });
+    }
+
+    function logout() {
         localStorage.clear();
         window.location.href = 'index.html';
-    };
+    }
+
+    document.getElementById('logoutBtn').onclick = logout;
+    const mobileLogoutBtn = document.getElementById('mobileLogoutBtn');
+    if (mobileLogoutBtn) mobileLogoutBtn.onclick = logout;
 
     function showTab(tab) {
         document.getElementById('coursesTab').style.display = tab === 'courses' ? 'block' : 'none';
@@ -230,78 +317,57 @@
             const container = document.getElementById('coursesList');
 
             if (courses.length === 0) {
-                container.innerHTML = '<p>📚 No courses yet. Click "Add New Course" to create one.</p>';
+                container.innerHTML = '<p>No courses yet.</p>';
                 return;
             }
 
             container.innerHTML = courses.map(course => `
-                    <div class="admin-course-item" id="course-${course.id}">
-                        <div class="course-info">
-                            <strong>${escapeHtml(course.title)}</strong><br>
-                            🎓 FREE | 📹 ${course.videos?.length || 0} videos
-                            <br><small>Course ID: ${course.id}</small>
-                        </div>
+                    <div class="admin-course-item">
+                        <div><strong>${escapeHtml(course.title)}</strong><br>FREE | ${course.videos?.length || 0} videos</div>
                         <div>
-                            <button onclick="viewCourseVideos(${course.id})" class="btn-secondary">
-                                📹 View Videos
-                            </button>
-                            <button onclick="deleteCourse(${course.id})" class="btn-danger">
-                                🗑️ Delete Course
-                            </button>
+                            <button onclick="viewCourseVideos(${course.id})" class="btn-secondary">View Videos</button>
+                            <button onclick="deleteCourse(${course.id})" class="btn-danger">Delete Course</button>
                         </div>
                     </div>
                 `).join('');
         } catch (error) {
             console.error('Error:', error);
-            container.innerHTML = '<p>❌ Error loading courses</p>';
         }
     }
 
     async function deleteCourse(courseId) {
-        if (confirm('⚠️ Delete this course? ALL videos will also be deleted!')) {
+        if (confirm('Delete this course? ALL videos will be deleted!')) {
             try {
-                const response = await fetch(`${API_BASE}/admin/courses/${courseId}`, {
+                await fetch(`${API_BASE}/admin/courses/${courseId}`, {
                     method: 'DELETE',
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
-
-                if (response.ok) {
-                    alert('✅ Course deleted successfully!');
-                    await loadCourses();
-                    await loadCourseSelect();
-                } else {
-                    alert('❌ Error deleting course');
-                }
+                alert('Course deleted');
+                await loadCourses();
+                await loadCourseSelect();
             } catch (error) {
-                alert('❌ Error deleting course: ' + error.message);
+                alert('Error deleting course');
             }
         }
     }
 
     async function deleteVideo(videoId, courseId) {
-        if (!confirm('⚠️ Delete this video?')) return;
-
+        if (!confirm('Delete this video?')) return;
         try {
-            const response = await fetch(`${API_BASE}/admin/videos/${videoId}`, {
+            await fetch(`${API_BASE}/admin/videos/${videoId}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
-
-            if (response.ok) {
-                alert('✅ Video deleted successfully!');
-                await loadCourseVideos(courseId);
-                await loadCourses();
-            } else {
-                alert('❌ Error deleting video');
-            }
+            alert('Video deleted');
+            await loadCourseVideos(courseId);
+            await loadCourses();
         } catch (error) {
-            alert('❌ Error deleting video: ' + error.message);
+            alert('Error deleting video');
         }
     }
 
     async function viewCourseVideos(courseId) {
         await loadCourseVideos(courseId);
-        document.getElementById('videoList').scrollIntoView({ behavior: 'smooth' });
     }
 
     async function loadCourseVideos(courseId) {
@@ -313,22 +379,20 @@
             const videoListDiv = document.getElementById('videoList');
 
             if (!course.videos || course.videos.length === 0) {
-                videoListDiv.innerHTML = '<p>No videos yet. Add your first YouTube video above.</p>';
+                videoListDiv.innerHTML = '<p>No videos yet.</p>';
                 return;
             }
 
-            videoListDiv.innerHTML = '<h4>📹 YouTube Videos:</h4>';
+            videoListDiv.innerHTML = '<h4>YouTube Videos:</h4>';
             course.videos.forEach(video => {
                 const minutes = video.duration ? Math.floor(video.duration / 60) : '?';
                 const seconds = video.duration ? video.duration % 60 : '?';
                 videoListDiv.innerHTML += `
-                        <div class="video-item" style="border:1px solid #ddd; padding:10px; margin:10px 0; border-radius:5px;">
-                            <strong>🎬 ${escapeHtml(video.title)}</strong><br>
-                            ⏱️ Duration: ${minutes}:${seconds}<br>
-                            🔗 YouTube: ${escapeHtml(video.videoUrl)}<br>
-                            <button onclick="deleteVideo(${video.id}, ${courseId})" style="background:#dc3545; color:white; padding:5px 10px; margin-top:10px; border:none; border-radius:3px; cursor:pointer;">
-                                🗑️ Delete Video
-                            </button>
+                        <div class="video-item">
+                            <strong>${escapeHtml(video.title)}</strong><br>
+                            Duration: ${minutes}:${seconds}<br>
+                            URL: ${escapeHtml(video.videoUrl)}<br>
+                            <button onclick="deleteVideo(${video.id}, ${courseId})" class="btn-danger">Delete Video</button>
                         </div>
                     `;
             });
@@ -337,7 +401,6 @@
             document.getElementById('videoSection').style.display = 'block';
         } catch (error) {
             console.error('Error:', error);
-            videoListDiv.innerHTML = '<p>❌ Error loading videos</p>';
         }
     }
 
@@ -360,21 +423,17 @@
         });
     }
 
-    // Course creation
     document.getElementById('courseForm').onsubmit = async (e) => {
         e.preventDefault();
-
         const course = {
             title: document.getElementById('courseTitle').value,
             description: document.getElementById('courseDesc').value,
             price: 0
         };
-
         const thumbnail = document.getElementById('courseThumbnail').files[0];
 
         try {
             let thumbnailUrl = null;
-
             if (thumbnail) {
                 const formData = new FormData();
                 formData.append('file', thumbnail);
@@ -384,89 +443,54 @@
                     body: formData
                 });
                 const uploadResult = await uploadResponse.json();
-                if (uploadResult.thumbnailUrl) {
-                    thumbnailUrl = uploadResult.thumbnailUrl;
-                }
+                if (uploadResult.thumbnailUrl) thumbnailUrl = uploadResult.thumbnailUrl;
             }
-
             if (thumbnailUrl) course.thumbnailUrl = thumbnailUrl;
 
             const createResponse = await fetch(`${API_BASE}/admin/courses`, {
                 method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                },
+                headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
                 body: JSON.stringify(course)
             });
-
             const result = await createResponse.json();
-            alert(`✅ Free course "${result.title}" created!`);
+            alert(`Course created!`);
             document.getElementById('courseForm').reset();
             document.getElementById('videoSection').style.display = 'block';
             await loadCourseSelect();
             await loadCourses();
         } catch (error) {
-            alert('❌ Error creating course: ' + error.message);
+            alert('Error creating course');
         }
     };
 
-    // YouTube video addition
     document.getElementById('videoForm').onsubmit = async (e) => {
         e.preventDefault();
-
-        const debugDiv = document.getElementById('debugInfo');
-        debugDiv.innerHTML = '';
-
         const courseId = document.getElementById('courseSelect').value;
-        if (!courseId) {
-            alert('Please select a course');
-            return;
-        }
+        if (!courseId) { alert('Select a course'); return; }
 
-        const videoTitle = document.getElementById('videoTitle').value;
-        const videoDesc = document.getElementById('videoDesc').value;
-        const youtubeInput = document.getElementById('youtubeUrl').value;
-        const duration = parseInt(document.getElementById('videoDuration').value) || 0;
-
-        if (!videoTitle || !youtubeInput) {
-            alert('Please fill in all required fields');
-            return;
-        }
-
-        debugDiv.innerHTML += `📹 Adding YouTube video: ${videoTitle}\n`;
-        debugDiv.innerHTML += `🎬 YouTube: ${youtubeInput}\n`;
-        debugDiv.innerHTML += `⏱️ Duration: ${Math.floor(duration/60)}m ${duration%60}s\n`;
+        const videoData = {
+            title: document.getElementById('videoTitle').value,
+            description: document.getElementById('videoDesc').value,
+            videoUrl: document.getElementById('youtubeUrl').value,
+            duration: parseInt(document.getElementById('videoDuration').value) || 0
+        };
 
         try {
-            const videoData = {
-                title: videoTitle,
-                description: videoDesc,
-                videoUrl: youtubeInput,
-                duration: duration
-            };
-
             const addResponse = await fetch(`${API_BASE}/admin/courses/${courseId}/videos`, {
                 method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                },
+                headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
                 body: JSON.stringify(videoData)
             });
-
             if (addResponse.ok) {
-                debugDiv.innerHTML += `✅ SUCCESS! YouTube video added!\n`;
-                alert(`✅ YouTube video added successfully!`);
+                alert('YouTube video added!');
                 document.getElementById('videoForm').reset();
                 await loadCourseVideos(courseId);
                 await loadCourses();
             } else {
-                throw new Error('Failed to add video');
+                alert('Error adding video');
             }
         } catch (error) {
-            debugDiv.innerHTML += `❌ ERROR: ${error.message}\n`;
-            alert('❌ Error: ' + error.message);
+            alert('Error adding video');
         }
     };
 

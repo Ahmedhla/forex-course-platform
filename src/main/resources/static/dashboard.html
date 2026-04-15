@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>My Dashboard - Forex Academy</title>
     <style>
         * {
@@ -14,15 +14,17 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: #f5f5f5;
         }
-        .navbar {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            color: white;
-            padding: 1rem 0;
-        }
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 20px;
+        }
+
+        /* Navbar Styles */
+        .navbar {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: white;
+            padding: 1rem 0;
         }
         .navbar .container {
             display: flex;
@@ -33,13 +35,98 @@
             font-size: 1.5rem;
             font-weight: bold;
         }
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
         .nav-links a {
             color: white;
             text-decoration: none;
-            margin-left: 2rem;
         }
         .nav-links a:hover {
             color: #ffd700;
+        }
+
+        /* Hamburger Menu */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 10px;
+        }
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background: white;
+            margin: 3px 0;
+            transition: 0.3s;
+            border-radius: 2px;
+        }
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(6px, 6px);
+        }
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(6px, -6px);
+        }
+
+        /* Mobile Menu */
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.95);
+            z-index: 999;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+        }
+        .mobile-menu a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.5rem;
+            padding: 15px;
+        }
+        .mobile-menu a:hover {
+            color: #ffd700;
+        }
+        .close-menu {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-size: 40px;
+            color: white;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+
+        /* Dashboard Styles */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        .stat-card {
+            background: white;
+            padding: 30px;
+            text-align: center;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .stat-card h3 {
+            font-size: 2rem;
+            color: #28a745;
         }
         .courses-grid {
             display: grid;
@@ -75,11 +162,6 @@
         }
         .course-card h3 {
             padding: 15px;
-            font-size: 1.2rem;
-        }
-        .course-card p {
-            padding: 0 15px;
-            color: #666;
         }
         .btn-primary {
             background: #28a745;
@@ -90,36 +172,31 @@
             margin: 15px;
             width: calc(100% - 30px);
             cursor: pointer;
-            font-size: 16px;
-            transition: background 0.3s;
         }
-        .btn-primary:hover {
-            background: #218838;
-        }
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin: 30px 0;
-        }
-        .stat-card {
-            background: white;
-            padding: 30px;
-            text-align: center;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-        .stat-card h3 {
-            font-size: 2rem;
-            color: #28a745;
-        }
-        h1 {
+        h1, h2 {
             margin-top: 20px;
             color: #333;
         }
-        h2 {
-            color: #333;
-            margin-top: 20px;
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            .hamburger {
+                display: flex;
+            }
+            .courses-grid {
+                grid-template-columns: 1fr;
+            }
+            .stats {
+                grid-template-columns: 1fr;
+            }
+        }
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .courses-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
     </style>
 </head>
@@ -132,8 +209,18 @@
             <a href="dashboard.html">My Courses</a>
             <a href="#" id="logoutBtn">Logout</a>
         </div>
+        <button class="hamburger" id="hamburgerBtn">
+            <span></span><span></span><span></span>
+        </button>
     </div>
 </nav>
+
+<div class="mobile-menu" id="mobileMenu">
+    <button class="close-menu" id="closeMenuBtn">&times;</button>
+    <a href="index.html">Home</a>
+    <a href="dashboard.html">My Courses</a>
+    <a href="#" id="mobileLogoutBtn">Logout</a>
+</div>
 
 <div class="container">
     <h1>📚 My Dashboard</h1>
@@ -143,7 +230,6 @@
             <p>Free Courses Available</p>
         </div>
     </div>
-
     <h2>All Free Courses</h2>
     <div id="myCourses" class="courses-grid"></div>
 </div>
@@ -156,10 +242,43 @@
         window.location.href = 'index.html';
     }
 
-    document.getElementById('logoutBtn').onclick = () => {
+    // Hamburger menu
+    const hamburgerBtn = document.getElementById('hamburgerBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const closeMenuBtn = document.getElementById('closeMenuBtn');
+
+    function closeMobileMenu() {
+        if (hamburgerBtn) hamburgerBtn.classList.remove('active');
+        if (mobileMenu) mobileMenu.style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
+
+    function openMobileMenu() {
+        if (hamburgerBtn) hamburgerBtn.classList.add('active');
+        if (mobileMenu) mobileMenu.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+
+    if (hamburgerBtn) hamburgerBtn.addEventListener('click', openMobileMenu);
+    if (closeMenuBtn) closeMenuBtn.addEventListener('click', closeMobileMenu);
+    if (mobileMenu) {
+        mobileMenu.addEventListener('click', (e) => {
+            if (e.target === mobileMenu) closeMobileMenu();
+        });
+        mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', closeMobileMenu);
+        });
+    }
+
+    // Logout
+    function logout() {
         localStorage.clear();
         window.location.href = 'index.html';
-    };
+    }
+
+    document.getElementById('logoutBtn').onclick = logout;
+    const mobileLogoutBtn = document.getElementById('mobileLogoutBtn');
+    if (mobileLogoutBtn) mobileLogoutBtn.onclick = logout;
 
     function goToCoursePlayer(courseId) {
         window.location.href = `course-player.html?courseId=${courseId}`;
@@ -196,19 +315,16 @@
                 }
 
                 return `
-                        <div class="course-card">
+                        <div class="course-card" onclick="goToCoursePlayer(${course.id})">
                             ${thumbnailHtml}
                             <h3>${escapeHtml(course.title)}</h3>
-                            <p>${escapeHtml(course.description?.substring(0, 80) || 'Click to start learning')}</p>
-                            <button class="btn-primary" onclick="goToCoursePlayer(${course.id})">
-                                ▶ Start Learning
-                            </button>
+                            <button class="btn-primary">▶ Start Learning</button>
                         </div>
                     `;
             }).join('');
         } catch (error) {
-            console.error('Error loading dashboard:', error);
-            document.getElementById('myCourses').innerHTML = '<p style="text-align:center; padding:40px;">Error loading courses. Please refresh.</p>';
+            console.error('Error:', error);
+            document.getElementById('myCourses').innerHTML = '<p style="text-align:center; padding:40px;">Error loading courses.</p>';
         }
     }
 

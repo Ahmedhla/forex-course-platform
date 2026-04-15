@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
   <title>Course Player - Forex Academy</title>
   <style>
     * {
@@ -14,15 +14,17 @@
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background: #f5f5f5;
     }
-    .navbar {
-      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-      color: white;
-      padding: 1rem 0;
-    }
     .container {
       max-width: 1200px;
       margin: 0 auto;
       padding: 0 20px;
+    }
+
+    /* Navbar */
+    .navbar {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      color: white;
+      padding: 1rem 0;
     }
     .navbar .container {
       display: flex;
@@ -33,14 +35,79 @@
       font-size: 1.5rem;
       font-weight: bold;
     }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+    }
     .nav-links a {
       color: white;
       text-decoration: none;
-      margin-left: 2rem;
     }
     .nav-links a:hover {
       color: #ffd700;
     }
+
+    /* Hamburger */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 10px;
+    }
+    .hamburger span {
+      width: 25px;
+      height: 3px;
+      background: white;
+      margin: 3px 0;
+      transition: 0.3s;
+      border-radius: 2px;
+    }
+    .hamburger.active span:nth-child(1) {
+      transform: rotate(45deg) translate(6px, 6px);
+    }
+    .hamburger.active span:nth-child(2) {
+      opacity: 0;
+    }
+    .hamburger.active span:nth-child(3) {
+      transform: rotate(-45deg) translate(6px, -6px);
+    }
+
+    /* Mobile Menu */
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.95);
+      z-index: 999;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 30px;
+    }
+    .mobile-menu a {
+      color: white;
+      text-decoration: none;
+      font-size: 1.5rem;
+      padding: 15px;
+    }
+    .close-menu {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      font-size: 40px;
+      color: white;
+      cursor: pointer;
+      background: none;
+      border: none;
+    }
+
+    /* Player */
     .player-container {
       display: flex;
       max-width: 1400px;
@@ -78,15 +145,8 @@
       background: white;
       border-radius: 10px;
       padding: 20px;
-      height: fit-content;
       max-height: 600px;
       overflow-y: auto;
-    }
-    .playlist-section h3 {
-      margin-bottom: 15px;
-      color: #333;
-      padding-bottom: 10px;
-      border-bottom: 2px solid #667eea;
     }
     .playlist-item {
       display: flex;
@@ -99,7 +159,6 @@
     }
     .playlist-item:hover {
       background: #e8e8e8;
-      transform: translateX(5px);
     }
     .playlist-item.active {
       background: #667eea;
@@ -121,27 +180,20 @@
     }
     .playlist-title {
       font-weight: bold;
-      margin-bottom: 5px;
-      font-size: 14px;
-    }
-    .playlist-duration {
-      font-size: 0.75rem;
-      color: #888;
-    }
-    .playlist-item.active .playlist-duration {
-      color: #ddd;
     }
     .loading {
       text-align: center;
       padding: 40px;
       color: #666;
     }
-    .error-message {
-      text-align: center;
-      padding: 40px;
-      color: red;
-    }
+
     @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+      }
+      .hamburger {
+        display: flex;
+      }
       .player-container {
         flex-direction: column;
       }
@@ -157,24 +209,29 @@
       <a href="index.html">Home</a>
       <a href="#" id="logoutBtn">Logout</a>
     </div>
+    <button class="hamburger" id="hamburgerBtn">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <button class="close-menu" id="closeMenuBtn">&times;</button>
+  <a href="dashboard.html">My Courses</a>
+  <a href="index.html">Home</a>
+  <a href="#" id="mobileLogoutBtn">Logout</a>
+</div>
 
 <div class="player-container">
   <div class="video-section">
     <div class="video-wrapper">
       <iframe id="youtubePlayer" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
     </div>
-    <div class="video-info" id="videoInfo">
-      <div class="loading">Loading video...</div>
-    </div>
+    <div class="video-info" id="videoInfo"><div class="loading">Loading video...</div></div>
   </div>
-
   <div class="playlist-section">
-    <h3>📋 Course Content</h3>
-    <div id="playlist">
-      <div class="loading">Loading playlist...</div>
-    </div>
+    <h3>Course Content</h3>
+    <div id="playlist"><div class="loading">Loading playlist...</div></div>
   </div>
 </div>
 
@@ -182,123 +239,96 @@
   const API_BASE = '/api';
   const token = localStorage.getItem('token');
 
-  // Check if user is logged in
-  if (!token) {
-    window.location.href = 'index.html';
+  if (!token) window.location.href = 'index.html';
+
+  // Hamburger menu
+  const hamburgerBtn = document.getElementById('hamburgerBtn');
+  const mobileMenu = document.getElementById('mobileMenu');
+  const closeMenuBtn = document.getElementById('closeMenuBtn');
+
+  function closeMobileMenu() {
+    if (hamburgerBtn) hamburgerBtn.classList.remove('active');
+    if (mobileMenu) mobileMenu.style.display = 'none';
+    document.body.style.overflow = 'auto';
   }
 
-  // Logout function
-  document.getElementById('logoutBtn').onclick = () => {
+  function openMobileMenu() {
+    if (hamburgerBtn) hamburgerBtn.classList.add('active');
+    if (mobileMenu) mobileMenu.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
+
+  if (hamburgerBtn) hamburgerBtn.addEventListener('click', openMobileMenu);
+  if (closeMenuBtn) closeMenuBtn.addEventListener('click', closeMobileMenu);
+  if (mobileMenu) {
+    mobileMenu.addEventListener('click', (e) => {
+      if (e.target === mobileMenu) closeMobileMenu();
+    });
+    mobileMenu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', closeMobileMenu);
+    });
+  }
+
+  function logout() {
     localStorage.clear();
     window.location.href = 'index.html';
-  };
-
-  // Get course ID from URL
-  const urlParams = new URLSearchParams(window.location.search);
-  const courseId = urlParams.get('courseId');
-
-  console.log('Course Player Loading - Course ID:', courseId);
-
-  if (!courseId) {
-    alert('No course selected. Redirecting to dashboard...');
-    window.location.href = 'dashboard.html';
   }
 
-  let videos = [];
-  let currentVideoIndex = 0;
+  document.getElementById('logoutBtn').onclick = logout;
+  const mobileLogoutBtn = document.getElementById('mobileLogoutBtn');
+  if (mobileLogoutBtn) mobileLogoutBtn.onclick = logout;
 
-  // Extract YouTube ID from URL
+  const urlParams = new URLSearchParams(window.location.search);
+  const courseId = urlParams.get('courseId');
+  let videos = [];
+
   function extractYouTubeId(url) {
     if (!url) return null;
-
-    // If it's already just an ID (11 characters)
-    if (url.match(/^[a-zA-Z0-9_-]{11}$/)) {
-      return url;
-    }
-
-    // Handle youtu.be format
-    if (url.includes("youtu.be/")) {
-      return url.substring(url.lastIndexOf("/") + 1);
-    }
-
-    // Handle youtube.com/watch?v= format
+    if (url.match(/^[a-zA-Z0-9_-]{11}$/)) return url;
+    if (url.includes("youtu.be/")) return url.substring(url.lastIndexOf("/") + 1);
     if (url.includes("youtube.com/watch?v=")) {
       let parts = url.split("v=");
       if (parts.length > 1) {
         let id = parts[1];
-        if (id.includes("&")) {
-          id = id.substring(0, id.indexOf("&"));
-        }
+        if (id.includes("&")) id = id.substring(0, id.indexOf("&"));
         return id;
       }
     }
-
-    // Handle youtube.com/embed/ format
-    if (url.includes("youtube.com/embed/")) {
-      return url.substring(url.lastIndexOf("/") + 1);
-    }
-
+    if (url.includes("youtube.com/embed/")) return url.substring(url.lastIndexOf("/") + 1);
     return url;
   }
 
-  // Format duration
   function formatDuration(seconds) {
-    if (!seconds || seconds === 0) return 'Duration not available';
+    if (!seconds) return 'Duration not available';
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
     return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
   }
 
-  // Escape HTML
-  function escapeHtml(text) {
-    if (!text) return '';
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-  }
-
-  // Load course and videos
   async function loadCourse() {
     try {
-      console.log('Loading course ID:', courseId);
-
-      // Get course details
-      const courseResponse = await fetch(`${API_BASE}/courses/public/${courseId}`);
-      if (!courseResponse.ok) throw new Error('Course not found');
-      const course = await courseResponse.json();
-      document.title = `${course.title} - Forex Academy`;
-
-      // Get videos for this course
       const videosResponse = await fetch(`${API_BASE}/courses/${courseId}/videos`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
-
       if (!videosResponse.ok) throw new Error('Failed to load videos');
-
       videos = await videosResponse.json();
-      console.log('Loaded videos:', videos);
 
       if (!videos || videos.length === 0) {
-        document.getElementById('playlist').innerHTML = '<div class="error-message">📹 No videos in this course yet.</div>';
-        document.getElementById('videoInfo').innerHTML = '<div class="error-message">No videos available</div>';
+        document.getElementById('playlist').innerHTML = '<div class="loading">No videos in this course.</div>';
         return;
       }
 
       loadPlaylist();
       loadVideo(0);
-
     } catch (error) {
-      console.error('Error loading course:', error);
-      document.getElementById('playlist').innerHTML = '<div class="error-message">❌ Error loading course</div>';
-      document.getElementById('videoInfo').innerHTML = '<div class="error-message">❌ Error loading course details</div>';
+      console.error('Error:', error);
     }
   }
 
-  // Load playlist
   function loadPlaylist() {
     const playlistDiv = document.getElementById('playlist');
     playlistDiv.innerHTML = videos.map((video, index) => `
-                <div class="playlist-item" onclick="loadVideo(${index})" data-video-id="${video.id}">
+                <div class="playlist-item" onclick="loadVideo(${index})">
                     <div class="playlist-thumb">🎬</div>
                     <div class="playlist-info">
                         <div class="playlist-title">${escapeHtml(video.title)}</div>
@@ -308,45 +338,32 @@
             `).join('');
   }
 
-  // Load specific video
-  function loadVideo(index) {
-    currentVideoIndex = index;
-    const video = videos[index];
+  function escapeHtml(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
 
-    if (!video || !video.videoUrl) {
-      document.getElementById('videoInfo').innerHTML = '<div class="error-message">❌ Invalid video data</div>';
-      return;
-    }
+  function loadVideo(index) {
+    const video = videos[index];
+    if (!video || !video.videoUrl) return;
 
     const youtubeId = extractYouTubeId(video.videoUrl);
     const embedUrl = `https://www.youtube.com/embed/${youtubeId}?enablejsapi=1`;
-
-    console.log('Playing YouTube video:', embedUrl);
-
-    const iframe = document.getElementById('youtubePlayer');
-    iframe.src = embedUrl;
+    document.getElementById('youtubePlayer').src = embedUrl;
 
     document.getElementById('videoInfo').innerHTML = `
                 <h2>${escapeHtml(video.title)}</h2>
-                <p>${escapeHtml(video.description) || 'No description available'}</p>
-                <div style="display: inline-block; background: #667eea; color: white; padding: 5px 10px; border-radius: 5px; margin-top: 10px;">
-                    ⏱️ Duration: ${formatDuration(video.duration)}
-                </div>
+                <p>${escapeHtml(video.description) || 'No description'}</p>
+                <div style="background:#667eea; color:white; padding:5px 10px; border-radius:5px; display:inline-block;">⏱️ ${formatDuration(video.duration)}</div>
             `;
 
-    // Update active state in playlist
     document.querySelectorAll('.playlist-item').forEach((item, i) => {
-      if (i === index) {
-        item.classList.add('active');
-      } else {
-        item.classList.remove('active');
-      }
+      item.classList.toggle('active', i === index);
     });
-
-    localStorage.setItem(`lastVideo_${courseId}`, video.id);
   }
 
-  // Start loading the course
   loadCourse();
 </script>
 </body>

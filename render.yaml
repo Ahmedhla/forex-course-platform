@@ -1,12 +1,13 @@
 services:
   - type: web
     name: forex-course-platform
-    runtime: java
+    runtime: image
     repo: https://github.com/Ahmedhla/forex-course-platform
     branch: master
     plan: free
-    buildCommand: ./mvnw clean package -DskipTests
-    startCommand: java -jar target/*.jar
+    dockerfilePath: ./Dockerfile
+    buildCommand: docker build -t forex-course-platform .
+    startCommand: docker run -p 8080:8080 forex-course-platform
     envVars:
       - key: DB_URL
         value: jdbc:postgresql://dpg-d7d3ldn41pts739pq70g-a/forex_course_db?ssl=true&sslmode=require

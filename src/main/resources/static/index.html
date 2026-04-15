@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>Forex Trading Academy | Free Forex Courses</title>
     <style>
         * {
@@ -21,6 +21,10 @@
             margin: 0 auto;
             padding: 0 20px;
         }
+
+        /* ======================================== */
+        /* NAVBAR STYLES */
+        /* ======================================== */
         .navbar {
             background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
             color: white;
@@ -41,15 +45,88 @@
         .logo span {
             color: #ffd700;
         }
+
+        /* Desktop navigation links */
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
         .nav-links a {
             color: white;
             text-decoration: none;
-            margin-left: 2rem;
             transition: color 0.3s;
         }
         .nav-links a:hover {
             color: #ffd700;
         }
+
+        /* Hamburger button - hidden on desktop */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 10px;
+        }
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background: white;
+            margin: 3px 0;
+            transition: 0.3s;
+            border-radius: 2px;
+        }
+
+        /* Close icon animation */
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(6px, 6px);
+        }
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(6px, -6px);
+        }
+
+        /* Mobile menu overlay */
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.95);
+            z-index: 999;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+        }
+        .mobile-menu a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.5rem;
+            padding: 15px;
+            transition: color 0.3s;
+        }
+        .mobile-menu a:hover {
+            color: #ffd700;
+        }
+        .close-menu {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-size: 40px;
+            color: white;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+
+        /* Hero Section */
         .hero {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
@@ -67,6 +144,8 @@
             margin-left: auto;
             margin-right: auto;
         }
+
+        /* Buttons */
         .btn-primary {
             background: #ffd700;
             color: #333;
@@ -90,6 +169,8 @@
         .btn-primary:hover, .btn-secondary:hover {
             transform: translateY(-2px);
         }
+
+        /* Courses */
         .courses {
             padding: 60px 0;
         }
@@ -146,6 +227,8 @@
             margin: 15px;
             width: calc(100% - 30px);
         }
+
+        /* Features */
         .features {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -160,6 +243,8 @@
             margin-bottom: 10px;
             color: #667eea;
         }
+
+        /* Modal */
         .modal {
             display: none;
             position: fixed;
@@ -203,9 +288,6 @@
             cursor: pointer;
             margin-top: 10px;
         }
-        .modal-content button:hover {
-            background: #5a67d8;
-        }
         .loading {
             text-align: center;
             padding: 40px;
@@ -218,31 +300,105 @@
             padding: 30px 0;
             margin-top: 60px;
         }
+
+        /* ======================================== */
+        /* RESPONSIVE DESIGN */
+        /* ======================================== */
         @media (max-width: 768px) {
-            .nav-links a {
-                margin-left: 1rem;
+            .nav-links {
+                display: none;
+            }
+            .hamburger {
+                display: flex;
+            }
+            .logo {
+                font-size: 1.2rem;
+            }
+            .hero {
+                padding: 60px 20px;
             }
             .hero h1 {
-                font-size: 2rem;
+                font-size: 1.8rem;
+            }
+            .hero p {
+                font-size: 1rem;
+            }
+            .courses-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            .features {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            .modal-content {
+                width: 95%;
+                margin: 30% auto;
+                padding: 20px;
+            }
+        }
+
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .courses-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+            }
+            .features {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 1.5rem;
+            }
+            .btn-primary, .btn-secondary {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+            .mobile-menu a {
+                font-size: 1.2rem;
             }
         }
     </style>
 </head>
 <body>
+<!-- Navbar -->
 <nav class="navbar">
     <div class="container">
         <div class="logo">📈 <span>Forex</span>Academy</div>
+
+        <!-- Desktop Navigation -->
         <div class="nav-links">
             <a href="#home">Home</a>
             <a href="#courses">Courses</a>
             <a href="#about">About</a>
-            <a href="#" id="dashboardLink" style="display:none;">Dashboard</a>
-            <a href="#" id="adminLink" style="display:none;">Admin</a>
+            <a href="dashboard.html" id="dashboardLink" style="display:none;">Dashboard</a>
+            <a href="admin.html" id="adminLink" style="display:none;">Admin</a>
             <a href="#" id="authBtn">Login / Register</a>
         </div>
+
+        <!-- Hamburger Button -->
+        <button class="hamburger" id="hamburgerBtn">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
     </div>
 </nav>
 
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobileMenu">
+    <button class="close-menu" id="closeMenuBtn">&times;</button>
+    <a href="#home">Home</a>
+    <a href="#courses">Courses</a>
+    <a href="#about">About</a>
+    <a href="dashboard.html" id="mobileDashboardLink" style="display:none;">Dashboard</a>
+    <a href="admin.html" id="mobileAdminLink" style="display:none;">Admin</a>
+    <a href="#" id="mobileAuthBtn">Login / Register</a>
+</div>
+
+<!-- Hero Section -->
 <section id="home" class="hero">
     <div class="container">
         <h1>Master Forex Trading</h1>
@@ -251,6 +407,7 @@
     </div>
 </section>
 
+<!-- Courses Section -->
 <section id="courses" class="courses">
     <div class="container">
         <h2>📚 Free Courses</h2>
@@ -260,6 +417,7 @@
     </div>
 </section>
 
+<!-- About Section -->
 <section id="about" class="about">
     <div class="container">
         <h2>Why Choose Us?</h2>
@@ -298,16 +456,16 @@
             <h2>Login</h2>
             <input type="email" id="loginEmail" placeholder="Email" required>
             <input type="password" id="loginPassword" placeholder="Password" required>
-            <button onclick="handleLogin()">Login</button>
-            <p style="margin-top:15px;">Don't have an account? <a href="#" onclick="showRegisterForm()">Register</a></p>
+            <button onclick="login()">Login</button>
+            <p style="margin-top:15px;">Don't have an account? <a href="#" onclick="showRegister()">Register</a></p>
         </div>
         <div id="registerForm" style="display:none;">
             <h2>Register</h2>
             <input type="text" id="regFullName" placeholder="Full Name" required>
             <input type="email" id="regEmail" placeholder="Email" required>
             <input type="password" id="regPassword" placeholder="Password" required>
-            <button onclick="handleRegister()">Register</button>
-            <p style="margin-top:15px;">Already have an account? <a href="#" onclick="showLoginForm()">Login</a></p>
+            <button onclick="register()">Register</button>
+            <p style="margin-top:15px;">Already have an account? <a href="#" onclick="showLogin()">Login</a></p>
         </div>
     </div>
 </div>
@@ -315,11 +473,44 @@
 <script>
     const API_BASE = '/api';
 
-    // ============================================
-    // AUTH FUNCTIONS
-    // ============================================
+    // ========================================
+    // HAMBURGER MENU JAVASCRIPT
+    // ========================================
+    const hamburgerBtn = document.getElementById('hamburgerBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const closeMenuBtn = document.getElementById('closeMenuBtn');
 
-    async function handleLogin() {
+    function closeMobileMenu() {
+        if (hamburgerBtn) hamburgerBtn.classList.remove('active');
+        if (mobileMenu) mobileMenu.style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
+
+    function openMobileMenu() {
+        if (hamburgerBtn) hamburgerBtn.classList.add('active');
+        if (mobileMenu) mobileMenu.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+
+    if (hamburgerBtn) {
+        hamburgerBtn.addEventListener('click', openMobileMenu);
+    }
+    if (closeMenuBtn) {
+        closeMenuBtn.addEventListener('click', closeMobileMenu);
+    }
+    if (mobileMenu) {
+        mobileMenu.addEventListener('click', (e) => {
+            if (e.target === mobileMenu) closeMobileMenu();
+        });
+        mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', closeMobileMenu);
+        });
+    }
+
+    // ========================================
+    // AUTH FUNCTIONS
+    // ========================================
+    async function login() {
         const email = document.getElementById('loginEmail').value;
         const password = document.getElementById('loginPassword').value;
 
@@ -351,7 +542,7 @@
         }
     }
 
-    async function handleRegister() {
+    async function register() {
         const fullName = document.getElementById('regFullName').value;
         const email = document.getElementById('regEmail').value;
         const password = document.getElementById('regPassword').value;
@@ -384,12 +575,12 @@
         }
     }
 
-    function showRegisterForm() {
+    function showRegister() {
         document.getElementById('loginForm').style.display = 'none';
         document.getElementById('registerForm').style.display = 'block';
     }
 
-    function showLoginForm() {
+    function showLogin() {
         document.getElementById('loginForm').style.display = 'block';
         document.getElementById('registerForm').style.display = 'none';
     }
@@ -398,18 +589,14 @@
         document.getElementById('courses').scrollIntoView({ behavior: 'smooth' });
     }
 
-    // ============================================
-    // NAVIGATION TO COURSE PLAYER - FIXED!
-    // ============================================
-    function goToCoursePlayer(courseId) {
+    function viewCourse(courseId) {
         const token = localStorage.getItem('token');
         if (!token) {
             alert('Please login to view courses');
             document.getElementById('authModal').style.display = 'block';
             return;
         }
-        // Explicitly go to course-player.html, NOT admin.html
-        window.location.href = `/course-player.html?courseId=${courseId}`;
+        window.location.href = `course-player.html?courseId=${courseId}`;
     }
 
     function escapeHtml(text) {
@@ -419,10 +606,7 @@
         return div.innerHTML;
     }
 
-    // ============================================
-    // LOAD COURSES
-    // ============================================
-    async function loadAllCourses() {
+    async function loadPublicCourses() {
         try {
             const response = await fetch(`${API_BASE}/courses/public`);
             const courses = await response.json();
@@ -448,7 +632,7 @@
                             <h3>${escapeHtml(course.title)}</h3>
                             <p>${escapeHtml(course.description?.substring(0, 100) || 'Learn professional forex trading strategies')}</p>
                             <div class="price">🎓 FREE</div>
-                            <button class="btn-secondary" onclick="goToCoursePlayer(${course.id})">Start Learning</button>
+                            <button class="btn-secondary" onclick="viewCourse(${course.id})">Start Learning</button>
                         </div>
                     `;
             }).join('');
@@ -458,50 +642,88 @@
         }
     }
 
-    // ============================================
-    // CHECK AUTHENTICATION
-    // ============================================
     function updateNavigation() {
         const token = localStorage.getItem('token');
         const role = localStorage.getItem('role');
 
+        // Desktop navigation
+        const dashboardLink = document.getElementById('dashboardLink');
+        const adminLink = document.getElementById('adminLink');
+        const authBtn = document.getElementById('authBtn');
+
+        // Mobile navigation
+        const mobileDashboard = document.getElementById('mobileDashboardLink');
+        const mobileAdmin = document.getElementById('mobileAdminLink');
+        const mobileAuthBtn = document.getElementById('mobileAuthBtn');
+
         if (token) {
-            const authBtn = document.getElementById('authBtn');
-            authBtn.innerHTML = 'Logout';
-            authBtn.onclick = (e) => {
-                e.preventDefault();
-                localStorage.clear();
-                window.location.reload();
-            };
-
-            const dashboardLink = document.getElementById('dashboardLink');
-            dashboardLink.style.display = 'block';
-            dashboardLink.href = 'dashboard.html';
-
-            if (role === 'ADMIN') {
-                const adminLink = document.getElementById('adminLink');
+            // Desktop
+            if (authBtn) {
+                authBtn.innerHTML = 'Logout';
+                authBtn.onclick = () => {
+                    localStorage.clear();
+                    window.location.reload();
+                };
+            }
+            if (dashboardLink) {
+                dashboardLink.style.display = 'block';
+                dashboardLink.href = 'dashboard.html';
+            }
+            if (role === 'ADMIN' && adminLink) {
                 adminLink.style.display = 'block';
                 adminLink.href = 'admin.html';
+            }
+
+            // Mobile
+            if (mobileAuthBtn) {
+                mobileAuthBtn.innerHTML = 'Logout';
+                mobileAuthBtn.onclick = () => {
+                    localStorage.clear();
+                    window.location.reload();
+                };
+            }
+            if (mobileDashboard) {
+                mobileDashboard.style.display = 'block';
+                mobileDashboard.href = 'dashboard.html';
+            }
+            if (role === 'ADMIN' && mobileAdmin) {
+                mobileAdmin.style.display = 'block';
+                mobileAdmin.href = 'admin.html';
             }
         }
     }
 
-    // ============================================
-    // MODAL HANDLING
-    // ============================================
+    // Modal handling
     const modal = document.getElementById('authModal');
     const authBtn = document.getElementById('authBtn');
+    const mobileAuthBtn = document.getElementById('mobileAuthBtn');
 
-    authBtn.onclick = (e) => {
-        e.preventDefault();
-        const token = localStorage.getItem('token');
-        if (token) {
-            localStorage.clear();
-            window.location.reload();
-        } else {
-            modal.style.display = 'block';
-        }
-    };
+    if (authBtn) {
+        authBtn.onclick = (e) => {
+            e.preventDefault();
+            const token = localStorage.getItem('token');
+            if (token) {
+                localStorage.clear();
+                window.location.reload();
+            } else {
+                modal.style.display = 'block';
+            }
+        };
+    }
+
+    if (mobileAuthBtn) {
+        mobileAuthBtn.onclick = (e) => {
+            e.preventDefault();
+            const token = localStorage.getItem('token');
+            if (token) {
+                localStorage.clear();
+                window.location.reload();
+            } else {
+                modal.style.display = 'block';
+                closeMobileMenu();
+            }
+        };
+    }
 
     document.querySelector('.close').onclick = () => {
         modal.style.display = 'none';
@@ -511,14 +733,9 @@
         if (e.target === modal) modal.style.display = 'none';
     };
 
-    // ============================================
-    // INITIALIZE PAGE
-    // ============================================
-    loadAllCourses();
+    // Initialize
+    loadPublicCourses();
     updateNavigation();
-
-    // Debug log to confirm function is available
-    console.log('Page loaded. goToCoursePlayer function is available.');
 </script>
 </body>
 </html>
