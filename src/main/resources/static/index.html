@@ -190,6 +190,7 @@
             overflow: hidden;
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
             transition: transform 0.3s;
+            cursor: pointer;
         }
         .course-card:hover {
             transform: translateY(-5px);
@@ -257,7 +258,7 @@
         }
         .modal-content {
             background-color: white;
-            margin: 15% auto;
+            margin: 10% auto;
             padding: 30px;
             width: 90%;
             max-width: 400px;
@@ -287,6 +288,21 @@
             border-radius: 5px;
             cursor: pointer;
             margin-top: 10px;
+        }
+        .modal-content button:hover {
+            background: #5a67d8;
+        }
+        .forgot-password {
+            text-align: center;
+            margin-top: 10px;
+        }
+        .forgot-password a {
+            color: #667eea;
+            text-decoration: none;
+            font-size: 0.85rem;
+        }
+        .forgot-password a:hover {
+            text-decoration: underline;
         }
         .loading {
             text-align: center;
@@ -452,13 +468,23 @@
 <div id="authModal" class="modal">
     <div class="modal-content">
         <span class="close">&times;</span>
+
+        <!-- Login Form -->
         <div id="loginForm">
             <h2>Login</h2>
             <input type="email" id="loginEmail" placeholder="Email" required>
             <input type="password" id="loginPassword" placeholder="Password" required>
             <button onclick="login()">Login</button>
+
+            <!-- Forgot Password Link -->
+            <div class="forgot-password">
+                <a href="forgot-password.html">Forgot Password?</a>
+            </div>
+
             <p style="margin-top:15px;">Don't have an account? <a href="#" onclick="showRegister()">Register</a></p>
         </div>
+
+        <!-- Register Form -->
         <div id="registerForm" style="display:none;">
             <h2>Register</h2>
             <input type="text" id="regFullName" placeholder="Full Name" required>
@@ -552,6 +578,11 @@
             return;
         }
 
+        if (password.length < 6) {
+            alert('Password must be at least 6 characters');
+            return;
+        }
+
         try {
             const response = await fetch(`${API_BASE}/auth/register`, {
                 method: 'POST',
@@ -606,6 +637,9 @@
         return div.innerHTML;
     }
 
+    // ========================================
+    // LOAD COURSES
+    // ========================================
     async function loadPublicCourses() {
         try {
             const response = await fetch(`${API_BASE}/courses/public`);
@@ -627,12 +661,12 @@
                 }
 
                 return `
-                        <div class="course-card">
+                        <div class="course-card" onclick="viewCourse(${course.id})">
                             ${thumbnailHtml}
                             <h3>${escapeHtml(course.title)}</h3>
                             <p>${escapeHtml(course.description?.substring(0, 100) || 'Learn professional forex trading strategies')}</p>
                             <div class="price">🎓 FREE</div>
-                            <button class="btn-secondary" onclick="viewCourse(${course.id})">Start Learning</button>
+                            <button class="btn-secondary" onclick="event.stopPropagation(); viewCourse(${course.id})">Start Learning</button>
                         </div>
                     `;
             }).join('');
@@ -642,6 +676,9 @@
         }
     }
 
+    // ========================================
+    // AUTHENTICATION CHECK
+    // ========================================
     function updateNavigation() {
         const token = localStorage.getItem('token');
         const role = localStorage.getItem('role');
@@ -660,7 +697,8 @@
             // Desktop
             if (authBtn) {
                 authBtn.innerHTML = 'Logout';
-                authBtn.onclick = () => {
+                authBtn.onclick = (e) => {
+                    e.preventDefault();
                     localStorage.clear();
                     window.location.reload();
                 };
@@ -677,9 +715,11 @@
             // Mobile
             if (mobileAuthBtn) {
                 mobileAuthBtn.innerHTML = 'Logout';
-                mobileAuthBtn.onclick = () => {
+                mobileAuthBtn.onclick = (e) => {
+                    e.preventDefault();
                     localStorage.clear();
                     window.location.reload();
+                    closeMobileMenu();
                 };
             }
             if (mobileDashboard) {
@@ -693,7 +733,9 @@
         }
     }
 
-    // Modal handling
+    // ========================================
+    // MODAL HANDLING
+    // ========================================
     const modal = document.getElementById('authModal');
     const authBtn = document.getElementById('authBtn');
     const mobileAuthBtn = document.getElementById('mobileAuthBtn');
@@ -733,7 +775,9 @@
         if (e.target === modal) modal.style.display = 'none';
     };
 
-    // Initialize
+    // ========================================
+    // INITIALIZE PAGE
+    // ========================================
     loadPublicCourses();
     updateNavigation();
 </script>
