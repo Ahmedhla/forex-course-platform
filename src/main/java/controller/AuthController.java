@@ -3,7 +3,9 @@ package com.forex.controller;
 import com.forex.model.User;
 import com.forex.repository.UserRepository;
 import com.forex.security.JwtUtil;
+import com.forex.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,6 +28,12 @@ public class AuthController {
 
     @Autowired
     private JwtUtil jwtUtil;
+
+    @Autowired
+    private EmailService emailService;
+
+    @Value("${app.base.url:http://localhost:8080}")
+    private String baseUrl;
 
     // ============================================
     // REGISTER
@@ -56,8 +64,16 @@ public class AuthController {
         user.setPassword(passwordEncoder.encode(password));
         user.setFullName(fullName);
         user.setRole("STUDENT");
+        user.setCreatedAt(LocalDateTime.now());
 
         userRepository.save(user);
+
+        // Send welcome email
+        try {
+            emailService.sendWelcomeEmail(email, fullName);
+        } catch (Exception e) {
+            System.out.println("Welcome email failed, but user was created: " + e.getMessage());
+        }
 
         // Generate token
         String token = jwtUtil.generateToken(email, "STUDENT");
@@ -100,7 +116,7 @@ public class AuthController {
     }
 
     // ============================================
-    // FORGOT PASSWORD - STEP 1: REQUEST RESET
+    // FORGOT PASSWORD - REQUEST RESET
     // ============================================
     @PostMapping("/forgot-password")
     public ResponseEntity<?> forgotPassword(@RequestBody Map<String, String> request) {
@@ -113,8 +129,9 @@ public class AuthController {
         User user = userRepository.findByEmail(email).orElse(null);
 
         // For security, always return success even if email doesn't exist
-        // This prevents attackers from finding out which emails are registered
+        // This prevents email enumeration attacks
         if (user == null) {
+            System.out.println("Password reset requested for non-existent email: " + email);
             return ResponseEntity.ok(Map.of(
                     "message", "If your email is registered, you will receive a password reset link."
             ));
@@ -126,35 +143,24 @@ public class AuthController {
         // Save token with 1 hour expiration
         user.setResetToken(resetToken);
         user.setResetTokenExpiry(LocalDateTime.now().plusHours(1));
-
         userRepository.save(user);
 
-        // Build reset link
-        String resetLink = "https://forex-course-platform.onrender.com/reset-password.html?token=" + resetToken;
-
-        // For local testing, use localhost
-        // String resetLink = "http://localhost:8080/reset-password.html?token=" + resetToken;
-
-        System.out.println("========================================");
-        System.out.println("PASSWORD RESET REQUEST");
-        System.out.println("Email: " + email);
-        System.out.println("Reset Token: " + resetToken);
-        System.out.println("Reset Link: " + resetLink);
-        System.out.println("Expires: " + user.getResetTokenExpiry());
-        System.out.println("========================================");
-
-        // TODO: In production, send actual email here
-        // For now, we return the link in the response for testing
-        // Remove this in production and implement email sending
+        // Send email with reset link
+        try {
+            emailService.sendPasswordResetEmail(email, resetToken);
+            System.out.println("✅ Password reset email sent to: " + email);
+        } catch (Exception e) {
+            System.err.println("❌ Failed to send email to: " + email);
+            e.printStackTrace();
+        }
 
         return ResponseEntity.ok(Map.of(
-                "message", "Password reset link has been sent to your email.",
-                "resetLink", resetLink  // Remove this line in production!
+                "message", "Password reset link has been sent to your email address."
         ));
     }
 
     // ============================================
-    // RESET PASSWORD - STEP 2: VERIFY TOKEN AND UPDATE
+    // RESET PASSWORD - VERIFY TOKEN AND UPDATE
     // ============================================
     @PostMapping("/reset-password")
     public ResponseEntity<?> resetPassword(@RequestBody Map<String, String> request) {
@@ -199,13 +205,15 @@ public class AuthController {
 
         userRepository.save(user);
 
+        System.out.println("✅ Password reset successfully for user: " + user.getEmail());
+
         return ResponseEntity.ok(Map.of(
                 "message", "Password has been reset successfully. You can now login with your new password."
         ));
     }
 
     // ============================================
-    // VALIDATE RESET TOKEN - Check if token is valid
+    // VALIDATE RESET TOKEN
     // ============================================
     @GetMapping("/validate-reset-token")
     public ResponseEntity<?> validateResetToken(@RequestParam String token) {
@@ -227,5 +235,33 @@ public class AuthController {
                 "valid", true,
                 "email", user.getEmail()
         ));
+    }
+
+    // ============================================
+    // GET CURRENT USER INFO
+    // ============================================
+    @GetMapping("/me")
+    public ResponseEntity<?> getCurrentUser(@RequestHeader("Authorization") String authHeader) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        String token = authHeader.substring(7);
+        String email = jwtUtil.extractEmail(token);
+
+        User user = userRepository.findByEmail(email).orElse(null);
+
+        if (user == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("id", user.getId());
+        response.put("email", user.getEmail());
+        response.put("fullName", user.getFullName());
+        response.put("role", user.getRole());
+        response.put("createdAt", user.getCreatedAt());
+
+        return ResponseEntity.ok(response);
     }
 }
