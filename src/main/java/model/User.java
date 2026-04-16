@@ -1,13 +1,17 @@
 package com.forex.model;
 
-import jakarta.persistence.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "users")
+@EntityListeners(AuditingEntityListener.class)
 public class User {
 
     @Id
@@ -28,7 +32,7 @@ public class User {
     private String role;
 
     // ============================================
-    // PASSWORD RESET FIELDS - NEW
+    // PASSWORD RESET FIELDS
     // ============================================
     @Column(name = "reset_token")
     private String resetToken;
@@ -36,7 +40,16 @@ public class User {
     @Column(name = "reset_token_expiry")
     private LocalDateTime resetTokenExpiry;
 
-    // Relationships
+    // ============================================
+    // AUDITING FIELDS
+    // ============================================
+    @CreatedDate
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
+
+    // ============================================
+    // RELATIONSHIPS
+    // ============================================
     @ManyToMany
     @JoinTable(
             name = "user_courses",
@@ -123,6 +136,16 @@ public class User {
         this.resetTokenExpiry = resetTokenExpiry;
     }
 
+    // Auditing Getter and Setter
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    // Relationships Getters and Setters
     public List<Course> getPurchasedCourses() {
         return purchasedCourses;
     }
