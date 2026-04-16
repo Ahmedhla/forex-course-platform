@@ -6,18 +6,16 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import java.time.LocalDateTime;
 
 @SpringBootApplication
-@EnableJpaAuditing
-public class MainApplication {
+public class ForexCoursePlatformApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(MainApplication.class, args);
+        SpringApplication.run(ForexCoursePlatformApplication.class, args);
         System.out.println("========================================");
         System.out.println("🚀 Forex Course Platform Started!");
-        System.out.println("📺 YouTube Course Platform with PostgreSQL");
         System.out.println("========================================");
     }
 
@@ -31,26 +29,12 @@ public class MainApplication {
                 admin.setPassword(passwordEncoder.encode("admin123"));
                 admin.setFullName("System Administrator");
                 admin.setRole("ADMIN");
+                admin.setCreatedAt(LocalDateTime.now());
                 userRepository.save(admin);
                 System.out.println("✅ Admin user created - Email: admin@forex.com, Password: admin123");
             } else {
                 System.out.println("✅ Admin user already exists");
             }
-
-            // Create a demo student user if not exists (optional)
-            if (!userRepository.existsByEmail("student@demo.com")) {
-                User student = new User();
-                student.setEmail("student@demo.com");
-                student.setPassword(passwordEncoder.encode("student123"));
-                student.setFullName("Demo Student");
-                student.setRole("STUDENT");
-                userRepository.save(student);
-                System.out.println("✅ Demo student created - Email: student@demo.com, Password: student123");
-            }
-
-            // Print total user count
-            long userCount = userRepository.count();
-            System.out.println("📊 Total users in database: " + userCount);
         };
     }
 }
