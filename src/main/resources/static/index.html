@@ -126,16 +126,17 @@
             border: none;
         }
 
-        /* Hero Section */
+        /* Hero Section - Clean & Attractive */
         .hero {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             text-align: center;
-            padding: 100px 0;
+            padding: 120px 0;
         }
         .hero h1 {
-            font-size: 3rem;
+            font-size: 3.5rem;
             margin-bottom: 1rem;
+            font-weight: 700;
         }
         .hero p {
             font-size: 1.2rem;
@@ -143,18 +144,20 @@
             max-width: 600px;
             margin-left: auto;
             margin-right: auto;
+            opacity: 0.95;
         }
 
         /* Buttons */
         .btn-primary {
             background: #ffd700;
             color: #333;
-            padding: 12px 30px;
+            padding: 14px 35px;
             border: none;
-            border-radius: 5px;
+            border-radius: 50px;
             font-size: 1rem;
+            font-weight: 600;
             cursor: pointer;
-            transition: transform 0.3s;
+            transition: transform 0.3s, box-shadow 0.3s;
         }
         .btn-secondary {
             background: #667eea;
@@ -168,16 +171,19 @@
         }
         .btn-primary:hover, .btn-secondary:hover {
             transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
         }
 
-        /* Courses */
+        /* Courses Section */
         .courses {
-            padding: 60px 0;
+            padding: 80px 0;
+            background: #f8f9fa;
         }
-        .courses h2, .about h2 {
+        .courses h2 {
             text-align: center;
-            margin-bottom: 40px;
-            font-size: 2rem;
+            margin-bottom: 50px;
+            font-size: 2.2rem;
+            color: #333;
         }
         .courses-grid {
             display: grid;
@@ -186,14 +192,15 @@
         }
         .course-card {
             background: white;
-            border-radius: 10px;
+            border-radius: 15px;
             overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            transition: transform 0.3s;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
             cursor: pointer;
         }
         .course-card:hover {
             transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
         }
         .thumbnail-container {
             width: 100%;
@@ -211,50 +218,128 @@
             object-fit: cover;
         }
         .course-card h3 {
-            padding: 15px 15px 10px;
+            padding: 20px 20px 10px;
             font-size: 1.2rem;
         }
         .course-card p {
-            padding: 0 15px;
+            padding: 0 20px;
             color: #666;
         }
         .course-card .price {
-            padding: 10px 15px;
+            padding: 10px 20px;
             font-size: 1.3rem;
             font-weight: bold;
             color: #28a745;
         }
         .course-card button {
-            margin: 15px;
-            width: calc(100% - 30px);
+            margin: 20px;
+            width: calc(100% - 40px);
         }
 
-        /* About Section */
+        /* About Section - With Your Custom Content */
         .about-section {
             background: white;
-            padding: 60px 0;
+            padding: 80px 0;
+        }
+        .about-section h2 {
+            text-align: center;
+            margin-bottom: 50px;
+            font-size: 2.2rem;
+            color: #333;
         }
         .about-content {
-            max-width: 800px;
+            max-width: 900px;
             margin: 0 auto;
+        }
+        .welcome-message {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 40px;
             text-align: center;
         }
-        .about-content p {
-            margin-bottom: 20px;
+        .welcome-message h3 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+        }
+        .welcome-message p {
+            font-size: 1.1rem;
+            line-height: 1.7;
+        }
+        .info-card {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border-left: 4px solid #ffd700;
+        }
+        .info-card h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+        }
+        .info-card p {
             color: #555;
             line-height: 1.8;
         }
-        .about-content h3 {
-            color: #667eea;
+        .info-card ul {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+        .info-card li {
+            margin: 8px 0;
+            color: #555;
+        }
+        .warning-box {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 20px;
+            border-radius: 10px;
             margin-top: 30px;
-            margin-bottom: 15px;
+        }
+        .warning-box p {
+            color: #856404;
+            margin: 0;
+        }
+        .btn-start {
+            display: inline-block;
+            background: #28a745;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 20px;
+            transition: background 0.3s;
+        }
+        .btn-start:hover {
+            background: #218838;
         }
 
-        /* Social Media Section */
+        /* Features */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+            padding: 60px 0;
+            background: #f8f9fa;
+        }
+        .feature {
+            text-align: center;
+            padding: 20px;
+        }
+        .feature h3 {
+            margin-bottom: 10px;
+            color: #667eea;
+        }
+
+        /* Social Section */
         .social-section {
             background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
             color: white;
-            padding: 40px 0;
+            padding: 50px 0;
             text-align: center;
         }
         .social-section h3 {
@@ -287,25 +372,6 @@
         .social-icon.telegram:hover {
             background: #0088cc;
             color: white;
-        }
-        .social-icon i {
-            font-size: 1.3rem;
-        }
-
-        /* Features */
-        .features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 30px;
-            margin-top: 40px;
-        }
-        .feature {
-            text-align: center;
-            padding: 20px;
-        }
-        .feature h3 {
-            margin-bottom: 10px;
-            color: #667eea;
         }
 
         /* Modal */
@@ -381,14 +447,11 @@
             .hamburger {
                 display: flex;
             }
-            .logo {
-                font-size: 1.2rem;
+            .hero h1 {
+                font-size: 2rem;
             }
             .hero {
-                padding: 60px 20px;
-            }
-            .hero h1 {
-                font-size: 1.8rem;
+                padding: 80px 0;
             }
             .courses-grid {
                 grid-template-columns: 1fr;
@@ -396,11 +459,12 @@
             .social-icons {
                 flex-direction: column;
                 align-items: center;
-                gap: 15px;
             }
-            .social-icon {
-                width: 80%;
-                justify-content: center;
+            .welcome-message {
+                padding: 25px;
+            }
+            .info-card {
+                padding: 20px;
             }
         }
     </style>
@@ -441,7 +505,7 @@
     <a href="#" id="mobileAuthBtn">Login / Register</a>
 </div>
 
-<!-- Hero Section -->
+<!-- Hero Section - Clean & Attractive -->
 <section id="home" class="hero">
     <div class="container">
         <h1>Master Forex Trading</h1>
@@ -460,41 +524,57 @@
     </div>
 </section>
 
-<!-- About Section - Detailed Forex Beginners Content -->
+<!-- About Section - Your Custom Content -->
 <section id="about" class="about-section">
     <div class="container">
-        <h2>About Forex Trading</h2>
+        <h2>About ForexAcademy</h2>
         <div class="about-content">
-            <p><strong>Forex (Foreign Exchange)</strong> is the global marketplace for trading currencies. It's the largest and most liquid financial market in the world, with over $6 trillion traded daily.</p>
 
-            <h3>📈 What is Forex Trading?</h3>
-            <p>Forex trading involves buying one currency while simultaneously selling another, speculating on price movements. Currencies are traded in pairs, such as EUR/USD (Euro/US Dollar) or GBP/JPY (British Pound/Japanese Yen).</p>
+            <!-- Welcome Message -->
+            <div class="welcome-message">
+                <h3>🎯 My Goal: Help You Understand Forex</h3>
+                <p>Forex (trading currencies) can look very scary. There are many big words and confusing charts. Most people feel lost when they start.</p>
+                <p>I am here to help you. I want to take the "hard" out of trading. I teach you how the markets work in a way that is easy to understand. No secrets, no fluff—just the facts.</p>
+            </div>
 
-            <h3>🎯 Why Trade Forex?</h3>
-            <p>✓ <strong>24-Hour Market</strong> - Trade anytime, day or night<br>
-                ✓ <strong>High Liquidity</strong> - Easy to enter and exit positions<br>
-                ✓ <strong>Leverage</strong> - Control large positions with small capital<br>
-                ✓ <strong>Low Costs</strong> - No commissions, only small spreads<br>
-                ✓ <strong>Accessible</strong> - Start with as little as $100</p>
+            <!-- Why Free -->
+            <div class="info-card">
+                <h3>💚 Why is this platform Free?</h3>
+                <p>Most people charge hundreds of dollars for Forex lessons. I don't.</p>
+                <p>Everything on this website is 100% free. I believe that everyone should have the chance to learn a new skill without spending a lot of money first. I want to build a community of smart traders who help each other. You don't need a credit card here—you just need a desire to learn.</p>
+            </div>
 
-            <h3>📚 What You'll Learn</h3>
-            <p>Our free courses cover everything from basics to advanced strategies:<br>
-                • Understanding currency pairs and pips<br>
-                • Technical analysis and chart patterns<br>
-                • Fundamental analysis and economic news<br>
-                • Risk management strategies<br>
-                • Trading psychology and discipline</p>
+            <!-- What You'll Learn -->
+            <div class="info-card">
+                <h3>📚 What You Will Learn</h3>
+                <p>I focus on the most important things for beginners:</p>
+                <ul>
+                    <li><strong>The Basics:</strong> What is a pip? How do you read a chart?</li>
+                    <li><strong>Safety First:</strong> How to trade without losing all your money.</li>
+                    <li><strong>The Truth:</strong> I tell you the reality of trading (it is not a "get rich quick" scheme).</li>
+                </ul>
+            </div>
 
-            <h3>⚠️ Important Disclaimer</h3>
-            <p>Forex trading involves substantial risk of loss. It is not suitable for all investors. Past performance does not guarantee future results. Always trade responsibly and never invest more than you can afford to lose.</p>
+            <!-- Ready to Start -->
+            <div class="info-card" style="text-align: center;">
+                <h3>🚀 Ready to Start?</h3>
+                <p>You don't need to be a math genius to trade Forex. You just need a good teacher and a lot of practice.</p>
+                <p>If you are tired of confusing videos and expensive courses, you are in the right place. Let's start learning together today.</p>
+                <button class="btn-start" onclick="scrollToCourses()">Start the Free Course</button>
+            </div>
+
+            <!-- Warning / Disclaimer -->
+            <div class="warning-box">
+                <p>⚠️ <strong>Important:</strong> Trading Forex involves risk. You can lose money. Please never trade with money you need for rent or food. My lessons are for education only.</p>
+            </div>
         </div>
     </div>
 </section>
 
 <!-- Features Section -->
-<section class="features-section">
+<div class="features">
     <div class="container">
-        <div class="features">
+        <div class="features-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px;">
             <div class="feature">
                 <h3>📹 YouTube Lessons</h3>
                 <p>High-quality YouTube video tutorials with real trading examples</p>
@@ -513,7 +593,7 @@
             </div>
         </div>
     </div>
-</section>
+</div>
 
 <!-- Social Media Section -->
 <div class="social-section">
@@ -570,9 +650,7 @@
 <script>
     const API_BASE = '/api';
 
-    // ========================================
-    // HAMBURGER MENU JAVASCRIPT
-    // ========================================
+    // Hamburger menu
     const hamburgerBtn = document.getElementById('hamburgerBtn');
     const mobileMenu = document.getElementById('mobileMenu');
     const closeMenuBtn = document.getElementById('closeMenuBtn');
@@ -589,12 +667,8 @@
         document.body.style.overflow = 'hidden';
     }
 
-    if (hamburgerBtn) {
-        hamburgerBtn.addEventListener('click', openMobileMenu);
-    }
-    if (closeMenuBtn) {
-        closeMenuBtn.addEventListener('click', closeMobileMenu);
-    }
+    if (hamburgerBtn) hamburgerBtn.addEventListener('click', openMobileMenu);
+    if (closeMenuBtn) closeMenuBtn.addEventListener('click', closeMobileMenu);
     if (mobileMenu) {
         mobileMenu.addEventListener('click', (e) => {
             if (e.target === mobileMenu) closeMobileMenu();
@@ -604,9 +678,7 @@
         });
     }
 
-    // ========================================
-    // AUTH FUNCTIONS
-    // ========================================
+    // Auth Functions
     async function login() {
         const email = document.getElementById('loginEmail').value;
         const password = document.getElementById('loginPassword').value;
@@ -708,9 +780,7 @@
         return div.innerHTML;
     }
 
-    // ========================================
-    // LOAD COURSES
-    // ========================================
+    // Load Courses
     async function loadPublicCourses() {
         try {
             const response = await fetch(`${API_BASE}/courses/public`);
@@ -747,19 +817,14 @@
         }
     }
 
-    // ========================================
-    // AUTHENTICATION CHECK
-    // ========================================
+    // Authentication Check
     function updateNavigation() {
         const token = localStorage.getItem('token');
         const role = localStorage.getItem('role');
 
-        // Desktop navigation
         const dashboardLink = document.getElementById('dashboardLink');
         const adminLink = document.getElementById('adminLink');
         const authBtn = document.getElementById('authBtn');
-
-        // Mobile navigation
         const mobileDashboard = document.getElementById('mobileDashboardLink');
         const mobileAdmin = document.getElementById('mobileAdminLink');
         const mobileAuthBtn = document.getElementById('mobileAuthBtn');
@@ -781,7 +846,6 @@
                 adminLink.style.display = 'block';
                 adminLink.href = 'admin.html';
             }
-
             if (mobileAuthBtn) {
                 mobileAuthBtn.innerHTML = 'Logout';
                 mobileAuthBtn.onclick = (e) => {
