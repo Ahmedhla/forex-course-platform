@@ -229,6 +229,69 @@
             width: calc(100% - 30px);
         }
 
+        /* About Section */
+        .about-section {
+            background: white;
+            padding: 60px 0;
+        }
+        .about-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        .about-content p {
+            margin-bottom: 20px;
+            color: #555;
+            line-height: 1.8;
+        }
+        .about-content h3 {
+            color: #667eea;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+
+        /* Social Media Section */
+        .social-section {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+        }
+        .social-section h3 {
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+        .social-icon {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255,255,255,0.1);
+            padding: 12px 25px;
+            border-radius: 50px;
+            text-decoration: none;
+            color: white;
+            transition: all 0.3s;
+            font-size: 1.1rem;
+        }
+        .social-icon:hover {
+            background: #ffd700;
+            color: #333;
+            transform: translateY(-3px);
+        }
+        .social-icon.telegram:hover {
+            background: #0088cc;
+            color: white;
+        }
+        .social-icon i {
+            font-size: 1.3rem;
+        }
+
         /* Features */
         .features {
             display: grid;
@@ -289,9 +352,6 @@
             cursor: pointer;
             margin-top: 10px;
         }
-        .modal-content button:hover {
-            background: #5a67d8;
-        }
         .forgot-password {
             text-align: center;
             margin-top: 10px;
@@ -300,9 +360,6 @@
             color: #667eea;
             text-decoration: none;
             font-size: 0.85rem;
-        }
-        .forgot-password a:hover {
-            text-decoration: underline;
         }
         .loading {
             text-align: center;
@@ -314,12 +371,9 @@
             color: white;
             text-align: center;
             padding: 30px 0;
-            margin-top: 60px;
         }
 
-        /* ======================================== */
-        /* RESPONSIVE DESIGN */
-        /* ======================================== */
+        /* Responsive */
         @media (max-width: 768px) {
             .nav-links {
                 display: none;
@@ -336,44 +390,17 @@
             .hero h1 {
                 font-size: 1.8rem;
             }
-            .hero p {
-                font-size: 1rem;
-            }
             .courses-grid {
                 grid-template-columns: 1fr;
-                gap: 20px;
             }
-            .features {
-                grid-template-columns: 1fr;
-                gap: 20px;
+            .social-icons {
+                flex-direction: column;
+                align-items: center;
+                gap: 15px;
             }
-            .modal-content {
-                width: 95%;
-                margin: 30% auto;
-                padding: 20px;
-            }
-        }
-
-        @media (min-width: 769px) and (max-width: 1024px) {
-            .courses-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 20px;
-            }
-            .features {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        @media (max-width: 480px) {
-            .hero h1 {
-                font-size: 1.5rem;
-            }
-            .btn-primary, .btn-secondary {
-                padding: 10px 20px;
-                font-size: 0.9rem;
-            }
-            .mobile-menu a {
-                font-size: 1.2rem;
+            .social-icon {
+                width: 80%;
+                justify-content: center;
             }
         }
     </style>
@@ -433,10 +460,40 @@
     </div>
 </section>
 
-<!-- About Section -->
-<section id="about" class="about">
+<!-- About Section - Detailed Forex Beginners Content -->
+<section id="about" class="about-section">
     <div class="container">
-        <h2>Why Choose Us?</h2>
+        <h2>About Forex Trading</h2>
+        <div class="about-content">
+            <p><strong>Forex (Foreign Exchange)</strong> is the global marketplace for trading currencies. It's the largest and most liquid financial market in the world, with over $6 trillion traded daily.</p>
+
+            <h3>📈 What is Forex Trading?</h3>
+            <p>Forex trading involves buying one currency while simultaneously selling another, speculating on price movements. Currencies are traded in pairs, such as EUR/USD (Euro/US Dollar) or GBP/JPY (British Pound/Japanese Yen).</p>
+
+            <h3>🎯 Why Trade Forex?</h3>
+            <p>✓ <strong>24-Hour Market</strong> - Trade anytime, day or night<br>
+                ✓ <strong>High Liquidity</strong> - Easy to enter and exit positions<br>
+                ✓ <strong>Leverage</strong> - Control large positions with small capital<br>
+                ✓ <strong>Low Costs</strong> - No commissions, only small spreads<br>
+                ✓ <strong>Accessible</strong> - Start with as little as $100</p>
+
+            <h3>📚 What You'll Learn</h3>
+            <p>Our free courses cover everything from basics to advanced strategies:<br>
+                • Understanding currency pairs and pips<br>
+                • Technical analysis and chart patterns<br>
+                • Fundamental analysis and economic news<br>
+                • Risk management strategies<br>
+                • Trading psychology and discipline</p>
+
+            <h3>⚠️ Important Disclaimer</h3>
+            <p>Forex trading involves substantial risk of loss. It is not suitable for all investors. Past performance does not guarantee future results. Always trade responsibly and never invest more than you can afford to lose.</p>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="features-section">
+    <div class="container">
         <div class="features">
             <div class="feature">
                 <h3>📹 YouTube Lessons</h3>
@@ -458,9 +515,23 @@
     </div>
 </section>
 
+<!-- Social Media Section -->
+<div class="social-section">
+    <div class="container">
+        <h3>📱 Connect With Us</h3>
+        <div class="social-icons">
+            <a href="https://t.me/forexbeginnersstd" target="_blank" class="social-icon telegram" rel="noopener noreferrer">
+                <span>💬</span> Join Our Telegram Channel
+            </a>
+        </div>
+        <p style="margin-top: 20px; opacity: 0.8;">Get daily trading signals, market analysis, and exclusive content</p>
+    </div>
+</div>
+
 <footer>
     <div class="container">
         <p>&copy; 2026 Forex Academy. All rights reserved. All courses are free.</p>
+        <p style="margin-top: 10px; font-size: 0.8rem;">Disclaimer: Forex trading involves substantial risk of loss. Educational purposes only.</p>
     </div>
 </footer>
 
@@ -694,7 +765,6 @@
         const mobileAuthBtn = document.getElementById('mobileAuthBtn');
 
         if (token) {
-            // Desktop
             if (authBtn) {
                 authBtn.innerHTML = 'Logout';
                 authBtn.onclick = (e) => {
@@ -712,7 +782,6 @@
                 adminLink.href = 'admin.html';
             }
 
-            // Mobile
             if (mobileAuthBtn) {
                 mobileAuthBtn.innerHTML = 'Logout';
                 mobileAuthBtn.onclick = (e) => {
@@ -733,9 +802,7 @@
         }
     }
 
-    // ========================================
-    // MODAL HANDLING
-    // ========================================
+    // Modal handling
     const modal = document.getElementById('authModal');
     const authBtn = document.getElementById('authBtn');
     const mobileAuthBtn = document.getElementById('mobileAuthBtn');
@@ -775,9 +842,7 @@
         if (e.target === modal) modal.style.display = 'none';
     };
 
-    // ========================================
-    // INITIALIZE PAGE
-    // ========================================
+    // Initialize
     loadPublicCourses();
     updateNavigation();
 </script>
