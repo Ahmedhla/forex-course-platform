@@ -61,7 +61,7 @@ public class EmailService {
                             "Best regards,\n" +
                             "Forex Academy Team"
             );
-            message.setFrom("noreply@forexacademy.com");
+            message.setFrom("asmursa@gmail.com");
 
             mailSender.send(message);
             System.out.println("✅ Welcome email sent to: " + to);
