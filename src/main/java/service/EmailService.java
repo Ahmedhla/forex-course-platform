@@ -15,8 +15,8 @@ public class EmailService {
     @Value("${app.base.url:http://localhost:8080}")
     private String baseUrl;
 
-    // Your actual Gmail address as the "From" email
-    private final String fromEmail = "asmursa@gmail.com";
+    @Value("${spring.mail.username}")
+    private String fromEmail;
 
     /**
      * Sends a password reset email to the user
@@ -39,11 +39,8 @@ public class EmailService {
                             "If you did not request this password reset, please ignore this email.\n\n" +
                             "For security reasons, do not share this link with anyone.\n\n" +
                             "Best regards,\n" +
-                            "Forex Academy Team\n" +
-                            "support@forexacademy.com"
+                            "Forex Academy Team"
             );
-
-            // Using your actual Gmail address as the From address
             message.setFrom(fromEmail);
 
             mailSender.send(message);
