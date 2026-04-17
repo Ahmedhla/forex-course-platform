@@ -236,95 +236,13 @@
             width: calc(100% - 40px);
         }
 
-        /* About Section - With Your Custom Content */
-        .about-section {
-            background: white;
-            padding: 80px 0;
-        }
-        .about-section h2 {
-            text-align: center;
-            margin-bottom: 50px;
-            font-size: 2.2rem;
-            color: #333;
-        }
-        .about-content {
-            max-width: 900px;
-            margin: 0 auto;
-        }
-        .welcome-message {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 40px;
-            border-radius: 20px;
-            margin-bottom: 40px;
-            text-align: center;
-        }
-        .welcome-message h3 {
-            font-size: 1.8rem;
-            margin-bottom: 15px;
-        }
-        .welcome-message p {
-            font-size: 1.1rem;
-            line-height: 1.7;
-        }
-        .info-card {
-            background: #f8f9fa;
-            padding: 30px;
-            border-radius: 15px;
-            margin-bottom: 30px;
-            border-left: 4px solid #ffd700;
-        }
-        .info-card h3 {
-            color: #667eea;
-            margin-bottom: 15px;
-            font-size: 1.4rem;
-        }
-        .info-card p {
-            color: #555;
-            line-height: 1.8;
-        }
-        .info-card ul {
-            margin-left: 20px;
-            margin-top: 10px;
-        }
-        .info-card li {
-            margin: 8px 0;
-            color: #555;
-        }
-        .warning-box {
-            background: #fff3cd;
-            border-left: 4px solid #ffc107;
-            padding: 20px;
-            border-radius: 10px;
-            margin-top: 30px;
-        }
-        .warning-box p {
-            color: #856404;
-            margin: 0;
-        }
-        .btn-start {
-            display: inline-block;
-            background: #28a745;
-            color: white;
-            padding: 12px 30px;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 600;
-            margin-top: 20px;
-            transition: background 0.3s;
-        }
-        .btn-start:hover {
-            background: #218838;
-        }
-
-        /* Features */
+        /* Features Section */
         .features {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 30px;
-            margin-top: 40px;
-            padding: 60px 0;
-            background: #f8f9fa;
+            padding: 80px 0;
+            background: white;
         }
         .feature {
             text-align: center;
@@ -333,6 +251,9 @@
         .feature h3 {
             margin-bottom: 10px;
             color: #667eea;
+        }
+        .feature p {
+            color: #666;
         }
 
         /* Social Section */
@@ -460,11 +381,9 @@
                 flex-direction: column;
                 align-items: center;
             }
-            .welcome-message {
-                padding: 25px;
-            }
-            .info-card {
-                padding: 20px;
+            .features {
+                grid-template-columns: 1fr;
+                gap: 20px;
             }
         }
     </style>
@@ -479,7 +398,7 @@
         <div class="nav-links">
             <a href="#home">Home</a>
             <a href="#courses">Courses</a>
-            <a href="#about">About</a>
+            <a href="about.html">About</a>
             <a href="dashboard.html" id="dashboardLink" style="display:none;">Dashboard</a>
             <a href="admin.html" id="adminLink" style="display:none;">Admin</a>
             <a href="#" id="authBtn">Login / Register</a>
@@ -499,7 +418,7 @@
     <button class="close-menu" id="closeMenuBtn">&times;</button>
     <a href="#home">Home</a>
     <a href="#courses">Courses</a>
-    <a href="#about">About</a>
+    <a href="about.html">About</a>
     <a href="dashboard.html" id="mobileDashboardLink" style="display:none;">Dashboard</a>
     <a href="admin.html" id="mobileAdminLink" style="display:none;">Admin</a>
     <a href="#" id="mobileAuthBtn">Login / Register</a>
@@ -524,57 +443,10 @@
     </div>
 </section>
 
-<!-- About Section - Your Custom Content -->
-<section id="about" class="about-section">
-    <div class="container">
-        <h2>About ForexAcademy</h2>
-        <div class="about-content">
-
-            <!-- Welcome Message -->
-            <div class="welcome-message">
-                <h3>🎯 My Goal: Help You Understand Forex</h3>
-                <p>Forex (trading currencies) can look very scary. There are many big words and confusing charts. Most people feel lost when they start.</p>
-                <p>I am here to help you. I want to take the "hard" out of trading. I teach you how the markets work in a way that is easy to understand. No secrets, no fluff—just the facts.</p>
-            </div>
-
-            <!-- Why Free -->
-            <div class="info-card">
-                <h3>💚 Why is this platform Free?</h3>
-                <p>Most people charge hundreds of dollars for Forex lessons. I don't.</p>
-                <p>Everything on this website is 100% free. I believe that everyone should have the chance to learn a new skill without spending a lot of money first. I want to build a community of smart traders who help each other. You don't need a credit card here—you just need a desire to learn.</p>
-            </div>
-
-            <!-- What You'll Learn -->
-            <div class="info-card">
-                <h3>📚 What You Will Learn</h3>
-                <p>I focus on the most important things for beginners:</p>
-                <ul>
-                    <li><strong>The Basics:</strong> What is a pip? How do you read a chart?</li>
-                    <li><strong>Safety First:</strong> How to trade without losing all your money.</li>
-                    <li><strong>The Truth:</strong> I tell you the reality of trading (it is not a "get rich quick" scheme).</li>
-                </ul>
-            </div>
-
-            <!-- Ready to Start -->
-            <div class="info-card" style="text-align: center;">
-                <h3>🚀 Ready to Start?</h3>
-                <p>You don't need to be a math genius to trade Forex. You just need a good teacher and a lot of practice.</p>
-                <p>If you are tired of confusing videos and expensive courses, you are in the right place. Let's start learning together today.</p>
-                <button class="btn-start" onclick="scrollToCourses()">Start the Free Course</button>
-            </div>
-
-            <!-- Warning / Disclaimer -->
-            <div class="warning-box">
-                <p>⚠️ <strong>Important:</strong> Trading Forex involves risk. You can lose money. Please never trade with money you need for rent or food. My lessons are for education only.</p>
-            </div>
-        </div>
-    </div>
-</section>
-
 <!-- Features Section -->
 <div class="features">
     <div class="container">
-        <div class="features-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px;">
             <div class="feature">
                 <h3>📹 YouTube Lessons</h3>
                 <p>High-quality YouTube video tutorials with real trading examples</p>
