@@ -15,6 +15,14 @@ public class EmailService {
     @Value("${app.base.url:http://localhost:8080}")
     private String baseUrl;
 
+    // Your actual Gmail address as the "From" email
+    private final String fromEmail = "asmursa@gmail.com";
+
+    /**
+     * Sends a password reset email to the user
+     * @param to Recipient email address
+     * @param resetToken Unique reset token
+     */
     public void sendPasswordResetEmail(String to, String resetToken) {
         try {
             String resetLink = baseUrl + "/reset-password.html?token=" + resetToken;
@@ -32,13 +40,18 @@ public class EmailService {
                             "For security reasons, do not share this link with anyone.\n\n" +
                             "Best regards,\n" +
                             "Forex Academy Team\n" +
-                            "https://forex-academy.com"
+                            "support@forexacademy.com"
             );
-            message.setFrom("noreply@forexacademy.com");
+
+            // Using your actual Gmail address as the From address
+            message.setFrom(fromEmail);
 
             mailSender.send(message);
+
             System.out.println("✅ Password reset email sent successfully to: " + to);
             System.out.println("   Reset link: " + resetLink);
+            System.out.println("   Sent from: " + fromEmail);
+
         } catch (Exception e) {
             System.err.println("❌ Failed to send password reset email to: " + to);
             System.err.println("   Error: " + e.getMessage());
@@ -46,6 +59,11 @@ public class EmailService {
         }
     }
 
+    /**
+     * Sends a welcome email to new registered users
+     * @param to Recipient email address
+     * @param fullName User's full name
+     */
     public void sendWelcomeEmail(String to, String fullName) {
         try {
             SimpleMailMessage message = new SimpleMailMessage();
@@ -56,17 +74,48 @@ public class EmailService {
                             "Welcome to Forex Academy! We're excited to have you on board.\n\n" +
                             "You can now access all our free forex trading courses.\n\n" +
                             "Get started by visiting our website and exploring our courses.\n\n" +
-                            "If you have any questions, feel free to contact us.\n\n" +
+                            "If you have any questions, feel free to contact us at support@forexacademy.com.\n\n" +
                             "Happy trading!\n\n" +
                             "Best regards,\n" +
                             "Forex Academy Team"
             );
-            message.setFrom("asmursa@gmail.com");
+            message.setFrom(fromEmail);
 
             mailSender.send(message);
+
             System.out.println("✅ Welcome email sent to: " + to);
+
         } catch (Exception e) {
             System.err.println("❌ Failed to send welcome email to: " + to);
+            System.err.println("   Error: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Sends a test email to verify email configuration
+     * @param to Recipient email address
+     */
+    public void sendTestEmail(String to) {
+        try {
+            SimpleMailMessage message = new SimpleMailMessage();
+            message.setTo(to);
+            message.setSubject("✅ Test Email - Forex Academy Email System Working");
+            message.setText(
+                    "Hello,\n\n" +
+                            "This is a test email from your Forex Academy platform.\n\n" +
+                            "If you received this, your email system is configured correctly!\n\n" +
+                            "Best regards,\n" +
+                            "Forex Academy Team"
+            );
+            message.setFrom(fromEmail);
+
+            mailSender.send(message);
+
+            System.out.println("✅ Test email sent successfully to: " + to);
+
+        } catch (Exception e) {
+            System.err.println("❌ Failed to send test email to: " + to);
+            System.err.println("   Error: " + e.getMessage());
         }
     }
 }
