@@ -5,131 +5,60 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Course Player - Forex Academy</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: #f5f5f5;
-    }
-    .navbar {
-      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-      color: white;
-      padding: 1rem 0;
-    }
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 20px;
-    }
-    .navbar .container {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .logo {
-      font-size: 1.5rem;
-      font-weight: bold;
-    }
-    .nav-links a {
-      color: white;
-      text-decoration: none;
-      margin-left: 2rem;
-    }
-    .player-container {
-      display: flex;
-      max-width: 1400px;
-      margin: 20px auto;
-      gap: 20px;
-      padding: 0 20px;
-    }
-    .video-section {
-      flex: 2;
-    }
-    .video-wrapper {
-      position: relative;
-      padding-bottom: 56.25%;
-      height: 0;
-      overflow: hidden;
-      border-radius: 10px;
-      background: black;
-    }
-    .video-wrapper iframe {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      border: none;
-    }
-    .video-info {
-      margin-top: 15px;
-      padding: 15px;
-      background: white;
-      border-radius: 10px;
-    }
-    .playlist-section {
-      flex: 1;
-      background: white;
-      border-radius: 10px;
-      padding: 20px;
-      max-height: 600px;
-      overflow-y: auto;
-    }
-    .playlist-item {
-      display: flex;
-      padding: 12px;
-      margin: 10px 0;
-      background: #f5f5f5;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: all 0.3s;
-    }
-    .playlist-item:hover {
-      background: #e8e8e8;
-    }
-    .playlist-item.active {
-      background: #667eea;
-      color: white;
-    }
-    .playlist-thumb {
-      width: 50px;
-      height: 50px;
-      background: #ddd;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-right: 12px;
-      font-size: 24px;
-    }
-    .playlist-info {
-      flex: 1;
-    }
-    .playlist-title {
-      font-weight: bold;
-    }
-    .loading {
-      text-align: center;
-      padding: 40px;
-      color: #666;
-    }
-    .pdf-material {
-      margin-top: 20px;
-      padding: 20px;
-      background: #f8f9fa;
-      border-radius: 10px;
-      display: none;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f5f5f5; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+
+    .navbar { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); color: white; padding: 1rem 0; }
+    .navbar .container { display: flex; justify-content: space-between; align-items: center; }
+    .logo { font-size: 1.5rem; font-weight: bold; }
+    .nav-links { display: flex; align-items: center; gap: 2rem; }
+    .nav-links a { color: white; text-decoration: none; }
+
+    .profile-container { position: relative; display: inline-block; }
+    .profile-btn { display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.1); border: none; padding: 8px 15px; border-radius: 40px; cursor: pointer; color: white; }
+    .profile-avatar { width: 32px; height: 32px; background: linear-gradient(135deg, #ffd700, #ff8c00); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #333; }
+    .profile-dropdown { position: absolute; top: 100%; right: 0; margin-top: 10px; background: white; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); min-width: 280px; display: none; overflow: hidden; z-index: 1001; }
+    .profile-dropdown.show { display: block; animation: fadeIn 0.2s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+    .dropdown-header { padding: 20px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; text-align: center; }
+    .dropdown-avatar { width: 60px; height: 60px; background: #ffd700; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px; font-size: 24px; font-weight: bold; color: #333; }
+    .dropdown-name { font-weight: bold; font-size: 16px; }
+    .dropdown-email { font-size: 12px; opacity: 0.8; }
+    .dropdown-role { display: inline-block; margin-top: 8px; padding: 4px 10px; background: rgba(255,255,255,0.2); border-radius: 20px; font-size: 11px; }
+    .dropdown-divider { height: 1px; background: #eee; }
+    .dropdown-item { display: flex; align-items: center; gap: 12px; padding: 12px 20px; color: #333; text-decoration: none; cursor: pointer; }
+    .dropdown-item:hover { background: #f5f5f5; }
+    .dropdown-logout { color: #dc3545; border-top: 1px solid #eee; }
+
+    .hamburger { display: none; flex-direction: column; cursor: pointer; background: none; border: none; padding: 10px; }
+    .hamburger span { width: 25px; height: 3px; background: white; margin: 3px 0; transition: 0.3s; border-radius: 2px; }
+
+    .mobile-menu { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.95); z-index: 999; flex-direction: column; justify-content: center; align-items: center; gap: 20px; }
+    .mobile-menu a { color: white; text-decoration: none; font-size: 1.5rem; padding: 15px; }
+    .close-menu { position: absolute; top: 20px; right: 30px; font-size: 40px; color: white; cursor: pointer; background: none; border: none; }
+    .mobile-profile { text-align: center; margin-bottom: 20px; }
+
+    .player-container { display: flex; max-width: 1400px; margin: 20px auto; gap: 20px; padding: 0 20px; }
+    .video-section { flex: 2; }
+    .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; border-radius: 10px; background: black; }
+    .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+    .video-info { margin-top: 15px; padding: 15px; background: white; border-radius: 10px; }
+    .playlist-section { flex: 1; background: white; border-radius: 10px; padding: 20px; max-height: 600px; overflow-y: auto; }
+    .playlist-item { display: flex; padding: 12px; margin: 10px 0; background: #f5f5f5; border-radius: 8px; cursor: pointer; transition: all 0.3s; }
+    .playlist-item:hover { background: #e8e8e8; }
+    .playlist-item.active { background: #667eea; color: white; }
+    .playlist-thumb { width: 50px; height: 50px; background: #ddd; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-right: 12px; font-size: 24px; }
+    .playlist-info { flex: 1; }
+    .playlist-title { font-weight: bold; }
+    .loading { text-align: center; padding: 40px; color: #666; }
+    .pdf-material { margin-top: 20px; padding: 20px; background: #f8f9fa; border-radius: 10px; display: none; }
+
     @media (max-width: 768px) {
-      .player-container {
-        flex-direction: column;
-      }
-      .nav-links a {
-        margin-left: 1rem;
-      }
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+      .player-container { flex-direction: column; }
+      .profile-name { display: none; }
     }
   </style>
 </head>
@@ -138,42 +67,107 @@
   <div class="container">
     <div class="logo">📈 ForexAcademy</div>
     <div class="nav-links">
-      <a href="dashboard.html">My Courses</a>
+      <a href="dashboard.html">Dashboard</a>
       <a href="index.html">Home</a>
+      <div id="profileContainer" class="profile-container" style="display:none;">
+        <button class="profile-btn" id="profileBtn">
+          <div class="profile-avatar" id="profileAvatar">U</div>
+          <span class="profile-name" id="profileName">User</span>
+          <span>▼</span>
+        </button>
+        <div class="profile-dropdown" id="profileDropdown">
+          <div class="dropdown-header">
+            <div class="dropdown-avatar" id="dropdownAvatar">U</div>
+            <div class="dropdown-name" id="dropdownName">User Name</div>
+            <div class="dropdown-email" id="dropdownEmail">user@example.com</div>
+            <div class="dropdown-role" id="dropdownRole">STUDENT</div>
+          </div>
+          <div class="dropdown-divider"></div>
+          <a href="dashboard.html" class="dropdown-item">📚 My Dashboard</a>
+          <a href="admin.html" class="dropdown-item" id="dropdownAdmin" style="display:none;">⚙️ Admin Panel</a>
+          <div class="dropdown-divider"></div>
+          <div class="dropdown-item dropdown-logout" id="dropdownLogout">🚪 Logout</div>
+        </div>
+      </div>
       <a href="#" id="logoutBtn">Logout</a>
     </div>
+    <button class="hamburger" id="hamburgerBtn"><span></span><span></span><span></span></button>
   </div>
 </nav>
 
+<div class="mobile-menu" id="mobileMenu">
+  <button class="close-menu" id="closeMenuBtn">&times;</button>
+  <div id="mobileProfile" class="mobile-profile" style="display:none;">
+    <div class="dropdown-avatar" id="mobileAvatar" style="margin:0 auto 10px;">U</div>
+    <div style="font-size:18px;font-weight:bold" id="mobileName">User Name</div>
+    <div style="font-size:12px;opacity:0.8" id="mobileEmail">user@example.com</div>
+    <div style="margin-top:8px"><span class="dropdown-role" id="mobileRole">STUDENT</span></div>
+  </div>
+  <a href="dashboard.html">Dashboard</a>
+  <a href="index.html">Home</a>
+  <a href="#" id="mobileLogoutBtn" style="color:#ff6b6b;">Logout</a>
+</div>
+
 <div class="player-container">
   <div class="video-section">
-    <div class="video-wrapper">
-      <iframe id="youtubePlayer" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-    </div>
+    <div class="video-wrapper"><iframe id="youtubePlayer" src="" frameborder="0" allowfullscreen></iframe></div>
     <div class="video-info" id="videoInfo"><div class="loading">Loading video...</div></div>
-
-    <!-- PDF Material Section -->
-    <div id="pdfMaterial" class="pdf-material">
-      <h3>📚 Course Materials</h3>
-      <div id="pdfContent"></div>
-    </div>
+    <div id="pdfMaterial" class="pdf-material"><h3>📚 Course Materials</h3><div id="pdfContent"></div></div>
   </div>
-  <div class="playlist-section">
-    <h3>Course Content</h3>
-    <div id="playlist"><div class="loading">Loading playlist...</div></div>
-  </div>
+  <div class="playlist-section"><h3>Course Content</h3><div id="playlist"><div class="loading">Loading playlist...</div></div></div>
 </div>
 
 <script>
   const API_BASE = '/api';
   const token = localStorage.getItem('token');
-
   if (!token) window.location.href = 'index.html';
 
-  document.getElementById('logoutBtn').onclick = () => {
-    localStorage.clear();
-    window.location.href = 'index.html';
-  };
+  // Profile functions
+  let currentUser = { fullName: localStorage.getItem('fullName') || 'User', email: '', role: localStorage.getItem('role') || 'STUDENT' };
+  async function fetchCurrentUser() {
+    try {
+      const response = await fetch(`${API_BASE}/auth/me`, { headers: { 'Authorization': `Bearer ${token}` } });
+      if (response.ok) { const user = await response.json(); currentUser = { fullName: user.fullName, email: user.email, role: user.role }; }
+    } catch (error) { console.error('Error:', error); }
+  }
+  function updateProfileUI() {
+    const fullName = currentUser.fullName || 'User';
+    const email = currentUser.email || 'user@example.com';
+    const role = currentUser.role || 'STUDENT';
+    const initials = fullName.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+    ['profileAvatar', 'dropdownAvatar', 'mobileAvatar'].forEach(id => { const el = document.getElementById(id); if (el) el.textContent = initials; });
+    const profileName = document.getElementById('profileName'); if (profileName) profileName.textContent = fullName.split(' ')[0];
+    const dropdownName = document.getElementById('dropdownName'); if (dropdownName) dropdownName.textContent = fullName;
+    const dropdownEmail = document.getElementById('dropdownEmail'); if (dropdownEmail) dropdownEmail.textContent = email;
+    const dropdownRole = document.getElementById('dropdownRole'); if (dropdownRole) dropdownRole.textContent = role;
+    document.getElementById('mobileName').textContent = fullName;
+    document.getElementById('mobileEmail').textContent = email;
+    document.getElementById('mobileRole').textContent = role;
+    const dropdownAdmin = document.getElementById('dropdownAdmin');
+    if (dropdownAdmin) dropdownAdmin.style.display = role === 'ADMIN' ? 'block' : 'none';
+  }
+  function initProfileMenu() {
+    const profileBtn = document.getElementById('profileBtn');
+    const profileDropdown = document.getElementById('profileDropdown');
+    if (profileBtn && profileDropdown) {
+      profileBtn.addEventListener('click', (e) => { e.stopPropagation(); profileDropdown.classList.toggle('show'); });
+      document.addEventListener('click', (e) => { if (!profileBtn.contains(e.target) && !profileDropdown.contains(e.target)) profileDropdown.classList.remove('show'); });
+    }
+  }
+  async function handleLogout() {
+    try { if (token) await fetch(`${API_BASE}/auth/logout`, { method: 'POST', headers: { 'Authorization': `Bearer ${token}` } }); }
+    catch (error) { console.error('Logout error:', error); }
+    finally { localStorage.clear(); window.location.href = 'index.html'; }
+  }
+
+  // Hamburger
+  const hamburgerBtn = document.getElementById('hamburgerBtn');
+  const mobileMenu = document.getElementById('mobileMenu');
+  const closeMenuBtn = document.getElementById('closeMenuBtn');
+  function closeMobileMenu() { if (hamburgerBtn) hamburgerBtn.classList.remove('active'); if (mobileMenu) mobileMenu.style.display = 'none'; document.body.style.overflow = 'auto'; }
+  function openMobileMenu() { if (hamburgerBtn) hamburgerBtn.classList.add('active'); if (mobileMenu) mobileMenu.style.display = 'flex'; document.body.style.overflow = 'hidden'; }
+  if (hamburgerBtn) hamburgerBtn.addEventListener('click', openMobileMenu);
+  if (closeMenuBtn) closeMenuBtn.addEventListener('click', closeMobileMenu);
 
   const urlParams = new URLSearchParams(window.location.search);
   const courseId = urlParams.get('courseId');
@@ -183,103 +177,57 @@
     if (!url) return null;
     if (url.match(/^[a-zA-Z0-9_-]{11}$/)) return url;
     if (url.includes("youtu.be/")) return url.substring(url.lastIndexOf("/") + 1);
-    if (url.includes("youtube.com/watch?v=")) {
-      let parts = url.split("v=");
-      if (parts.length > 1) {
-        let id = parts[1];
-        if (id.includes("&")) id = id.substring(0, id.indexOf("&"));
-        return id;
-      }
-    }
-    if (url.includes("youtube.com/embed/")) return url.substring(url.lastIndexOf("/") + 1);
+    if (url.includes("youtube.com/watch?v=")) { let parts = url.split("v="); if (parts.length > 1) { let id = parts[1]; if (id.includes("&")) id = id.substring(0, id.indexOf("&")); return id; } }
     return url;
   }
-
-  function formatDuration(seconds) {
-    if (!seconds) return 'Duration not available';
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
-  }
-
-  function escapeHtml(text) {
-    if (!text) return '';
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-  }
+  function formatDuration(seconds) { if (!seconds) return 'N/A'; const m = Math.floor(seconds / 60); const s = seconds % 60; return `${m}:${s.toString().padStart(2, '0')}`; }
+  function escapeHtml(text) { if (!text) return ''; const div = document.createElement('div'); div.textContent = text; return div.innerHTML; }
 
   async function loadCourse() {
     try {
-      const videosResponse = await fetch(`${API_BASE}/courses/${courseId}/videos`, {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      if (!videosResponse.ok) throw new Error('Failed to load videos');
-      videos = await videosResponse.json();
-      if (!videos || videos.length === 0) {
-        document.getElementById('playlist').innerHTML = '<div class="loading">No videos in this course.</div>';
-        return;
-      }
+      const videosRes = await fetch(`${API_BASE}/courses/${courseId}/videos`, { headers: { 'Authorization': `Bearer ${token}` } });
+      videos = await videosRes.json();
+      if (!videos.length) { document.getElementById('playlist').innerHTML = '<div class="loading">No videos</div>'; return; }
       loadPlaylist();
       loadVideo(0);
       await loadPdfMaterial();
-    } catch (error) {
-      console.error('Error:', error);
-    }
+    } catch (error) { console.error('Error:', error); }
   }
 
   function loadPlaylist() {
-    const playlistDiv = document.getElementById('playlist');
-    playlistDiv.innerHTML = videos.map((video, index) => `
-                <div class="playlist-item" onclick="loadVideo(${index})">
-                    <div class="playlist-thumb">🎬</div>
-                    <div class="playlist-info">
-                        <div class="playlist-title">${escapeHtml(video.title)}</div>
-                        <div class="playlist-duration">⏱️ ${formatDuration(video.duration)}</div>
-                    </div>
-                </div>
-            `).join('');
+    const div = document.getElementById('playlist');
+    div.innerHTML = videos.map((v, i) => `<div class="playlist-item" onclick="loadVideo(${i})"><div class="playlist-thumb">🎬</div><div class="playlist-info"><div class="playlist-title">${escapeHtml(v.title)}</div><div class="playlist-duration">⏱️ ${formatDuration(v.duration)}</div></div></div>`).join('');
   }
 
   function loadVideo(index) {
     const video = videos[index];
-    if (!video || !video.videoUrl) return;
+    if (!video?.videoUrl) return;
     const youtubeId = extractYouTubeId(video.videoUrl);
-    const embedUrl = `https://www.youtube.com/embed/${youtubeId}?enablejsapi=1`;
-    document.getElementById('youtubePlayer').src = embedUrl;
-    document.getElementById('videoInfo').innerHTML = `
-                <h2>${escapeHtml(video.title)}</h2>
-                <p>${escapeHtml(video.description) || 'No description'}</p>
-                <div style="background:#667eea; color:white; padding:5px 10px; border-radius:5px; display:inline-block;">⏱️ ${formatDuration(video.duration)}</div>
-            `;
-    document.querySelectorAll('.playlist-item').forEach((item, i) => {
-      item.classList.toggle('active', i === index);
-    });
+    document.getElementById('youtubePlayer').src = `https://www.youtube.com/embed/${youtubeId}?enablejsapi=1`;
+    document.getElementById('videoInfo').innerHTML = `<h2>${escapeHtml(video.title)}</h2><p>${escapeHtml(video.description) || 'No description'}</p><div style="background:#667eea;color:white;padding:5px 10px;border-radius:5px;display:inline-block;">⏱️ ${formatDuration(video.duration)}</div>`;
+    document.querySelectorAll('.playlist-item').forEach((item, i) => item.classList.toggle('active', i === index));
   }
 
   async function loadPdfMaterial() {
     try {
-      const response = await fetch(`${API_BASE}/courses/public/${courseId}`);
-      const course = await response.json();
-      if (course.pdfUrl && course.pdfUrl !== '') {
-        const pdfDiv = document.getElementById('pdfMaterial');
-        const pdfContent = document.getElementById('pdfContent');
-        const fileSizeMB = course.pdfSize ? (course.pdfSize / 1024 / 1024).toFixed(2) : '';
-        pdfContent.innerHTML = `
-                        <div style="background: white; padding: 15px; border-radius: 10px; border-left: 4px solid #ffc107;">
-                            <strong>📖 ${escapeHtml(course.pdfTitle || 'Course Material')}</strong><br>
-                            <small>PDF Document ${fileSizeMB ? `(${fileSizeMB} MB)` : ''}</small>
-                            <p style="margin: 10px 0;">Download this PDF guide to follow along with the course.</p>
-                            <a href="${course.pdfUrl}" target="_blank" class="btn-secondary" style="display: inline-block; padding: 8px 20px; background: #28a745; text-decoration: none; color: white; border-radius: 5px;">📥 Download PDF</a>
-                        </div>
-                    `;
-        pdfDiv.style.display = 'block';
+      const res = await fetch(`${API_BASE}/courses/public/${courseId}`);
+      const course = await res.json();
+      if (course.pdfUrl) {
+        const div = document.getElementById('pdfMaterial');
+        const content = document.getElementById('pdfContent');
+        content.innerHTML = `<div style="background:white;padding:15px;border-radius:10px;border-left:4px solid #ffc107;"><strong>📖 ${escapeHtml(course.pdfTitle || 'Course Material')}</strong><p style="margin:10px 0;">Download this PDF guide.</p><a href="${course.pdfUrl}" target="_blank" class="btn-secondary" style="display:inline-block;padding:8px 20px;background:#28a745;color:white;text-decoration:none;border-radius:5px;">📥 Download PDF</a></div>`;
+        div.style.display = 'block';
       }
-    } catch (error) {
-      console.error('Error loading PDF:', error);
-    }
+    } catch (error) { console.error('Error loading PDF:', error); }
   }
 
+  document.getElementById('logoutBtn').onclick = handleLogout;
+  const dropdownLogout = document.getElementById('dropdownLogout');
+  if (dropdownLogout) dropdownLogout.addEventListener('click', handleLogout);
+  const mobileLogoutBtn = document.getElementById('mobileLogoutBtn');
+  if (mobileLogoutBtn) mobileLogoutBtn.addEventListener('click', handleLogout);
+
+  fetchCurrentUser().then(() => { updateProfileUI(); initProfileMenu(); });
   loadCourse();
 </script>
 </body>

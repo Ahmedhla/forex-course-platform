@@ -2,253 +2,65 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About - Forex Academy</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            background: #f5f5f5;
-        }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f5f5f5; line-height: 1.6; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
 
-        /* Navbar */
-        .navbar {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            color: white;
-            padding: 1rem 0;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-        .navbar .container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .logo {
-            font-size: 1.5rem;
-            font-weight: bold;
-        }
-        .logo span {
-            color: #ffd700;
-        }
+        .navbar { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); color: white; padding: 1rem 0; }
+        .navbar .container { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.5rem; font-weight: bold; }
+        .logo span { color: #ffd700; }
+        .nav-links { display: flex; align-items: center; gap: 2rem; }
+        .nav-links a { color: white; text-decoration: none; }
 
-        /* Desktop navigation */
-        .nav-links {
-            display: flex;
-            align-items: center;
-            gap: 2rem;
-        }
-        .nav-links a {
-            color: white;
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-        .nav-links a:hover {
-            color: #ffd700;
-        }
+        .profile-container { position: relative; display: inline-block; }
+        .profile-btn { display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.1); border: none; padding: 8px 15px; border-radius: 40px; cursor: pointer; color: white; }
+        .profile-avatar { width: 32px; height: 32px; background: linear-gradient(135deg, #ffd700, #ff8c00); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #333; }
+        .profile-dropdown { position: absolute; top: 100%; right: 0; margin-top: 10px; background: white; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); min-width: 280px; display: none; overflow: hidden; z-index: 1001; }
+        .profile-dropdown.show { display: block; animation: fadeIn 0.2s ease; }
+        .dropdown-header { padding: 20px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; text-align: center; }
+        .dropdown-avatar { width: 60px; height: 60px; background: #ffd700; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px; font-size: 24px; font-weight: bold; color: #333; }
+        .dropdown-name { font-weight: bold; font-size: 16px; }
+        .dropdown-email { font-size: 12px; opacity: 0.8; }
+        .dropdown-role { display: inline-block; margin-top: 8px; padding: 4px 10px; background: rgba(255,255,255,0.2); border-radius: 20px; font-size: 11px; }
+        .dropdown-divider { height: 1px; background: #eee; }
+        .dropdown-item { display: flex; align-items: center; gap: 12px; padding: 12px 20px; color: #333; text-decoration: none; cursor: pointer; }
+        .dropdown-item:hover { background: #f5f5f5; }
+        .dropdown-logout { color: #dc3545; border-top: 1px solid #eee; }
 
-        /* Hamburger */
-        .hamburger {
-            display: none;
-            flex-direction: column;
-            cursor: pointer;
-            background: none;
-            border: none;
-            padding: 10px;
-        }
-        .hamburger span {
-            width: 25px;
-            height: 3px;
-            background: white;
-            margin: 3px 0;
-            transition: 0.3s;
-            border-radius: 2px;
-        }
-        .hamburger.active span:nth-child(1) {
-            transform: rotate(45deg) translate(6px, 6px);
-        }
-        .hamburger.active span:nth-child(2) {
-            opacity: 0;
-        }
-        .hamburger.active span:nth-child(3) {
-            transform: rotate(-45deg) translate(6px, -6px);
-        }
+        .hamburger { display: none; flex-direction: column; cursor: pointer; background: none; border: none; padding: 10px; }
+        .hamburger span { width: 25px; height: 3px; background: white; margin: 3px 0; transition: 0.3s; border-radius: 2px; }
 
-        /* Mobile Menu */
-        .mobile-menu {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.95);
-            z-index: 999;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            gap: 30px;
-        }
-        .mobile-menu a {
-            color: white;
-            text-decoration: none;
-            font-size: 1.5rem;
-            padding: 15px;
-        }
-        .close-menu {
-            position: absolute;
-            top: 20px;
-            right: 30px;
-            font-size: 40px;
-            color: white;
-            cursor: pointer;
-            background: none;
-            border: none;
-        }
+        .mobile-menu { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.95); z-index: 999; flex-direction: column; justify-content: center; align-items: center; gap: 20px; }
+        .mobile-menu a { color: white; text-decoration: none; font-size: 1.5rem; padding: 15px; }
+        .close-menu { position: absolute; top: 20px; right: 30px; font-size: 40px; color: white; cursor: pointer; background: none; border: none; }
+        .mobile-profile { text-align: center; margin-bottom: 20px; }
 
-        /* About Section */
-        .about-section {
-            background: white;
-            padding: 80px 0;
-            min-height: calc(100vh - 200px);
-        }
-        .about-section h1 {
-            text-align: center;
-            margin-bottom: 50px;
-            font-size: 2.5rem;
-            color: #333;
-        }
-        .about-content {
-            max-width: 900px;
-            margin: 0 auto;
-        }
-        .welcome-message {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 40px;
-            border-radius: 20px;
-            margin-bottom: 40px;
-            text-align: center;
-        }
-        .welcome-message h2 {
-            font-size: 1.8rem;
-            margin-bottom: 15px;
-        }
-        .welcome-message p {
-            font-size: 1.1rem;
-            line-height: 1.7;
-        }
-        .info-card {
-            background: #f8f9fa;
-            padding: 30px;
-            border-radius: 15px;
-            margin-bottom: 30px;
-            border-left: 4px solid #ffd700;
-        }
-        .info-card h3 {
-            color: #667eea;
-            margin-bottom: 15px;
-            font-size: 1.4rem;
-        }
-        .info-card p {
-            color: #555;
-            line-height: 1.8;
-        }
-        .info-card ul {
-            margin-left: 20px;
-            margin-top: 10px;
-        }
-        .info-card li {
-            margin: 8px 0;
-            color: #555;
-        }
-        .warning-box {
-            background: #fff3cd;
-            border-left: 4px solid #ffc107;
-            padding: 20px;
-            border-radius: 10px;
-            margin-top: 30px;
-        }
-        .warning-box p {
-            color: #856404;
-            margin: 0;
-        }
-        .btn-start {
-            display: inline-block;
-            background: #28a745;
-            color: white;
-            padding: 12px 30px;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 600;
-            margin-top: 20px;
-            transition: background 0.3s;
-        }
-        .btn-start:hover {
-            background: #218838;
-        }
-
-        /* Social Section */
-        .social-section {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            color: white;
-            padding: 50px 0;
-            text-align: center;
-        }
-        .social-icons {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            flex-wrap: wrap;
-        }
-        .social-icon {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            background: rgba(255,255,255,0.1);
-            padding: 12px 25px;
-            border-radius: 50px;
-            text-decoration: none;
-            color: white;
-            transition: all 0.3s;
-        }
-        .social-icon:hover {
-            background: #ffd700;
-            color: #333;
-        }
-
-        footer {
-            background: #1a1a2e;
-            color: white;
-            text-align: center;
-            padding: 30px 0;
-        }
+        .about-section { background: white; padding: 80px 0; min-height: calc(100vh - 200px); }
+        .about-section h1 { text-align: center; margin-bottom: 50px; font-size: 2.5rem; color: #333; }
+        .about-content { max-width: 900px; margin: 0 auto; }
+        .welcome-message { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 40px; border-radius: 20px; margin-bottom: 40px; text-align: center; }
+        .welcome-message h2 { font-size: 1.8rem; margin-bottom: 15px; }
+        .info-card { background: #f8f9fa; padding: 30px; border-radius: 15px; margin-bottom: 30px; border-left: 4px solid #ffd700; }
+        .info-card h3 { color: #667eea; margin-bottom: 15px; font-size: 1.4rem; }
+        .info-card ul { margin-left: 20px; margin-top: 10px; }
+        .info-card li { margin: 8px 0; }
+        .warning-box { background: #fff3cd; border-left: 4px solid #ffc107; padding: 20px; border-radius: 10px; margin-top: 30px; }
+        .btn-start { display: inline-block; background: #28a745; color: white; padding: 12px 30px; border-radius: 50px; text-decoration: none; font-weight: 600; margin-top: 20px; }
+        .social-section { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); color: white; padding: 50px 0; text-align: center; }
+        .social-icons { display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; }
+        .social-icon { display: inline-flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.1); padding: 12px 25px; border-radius: 50px; text-decoration: none; color: white; transition: all 0.3s; }
+        .social-icon:hover { background: #ffd700; color: #333; }
+        footer { background: #1a1a2e; color: white; text-align: center; padding: 30px 0; }
 
         @media (max-width: 768px) {
-            .nav-links {
-                display: none;
-            }
-            .hamburger {
-                display: flex;
-            }
-            .welcome-message {
-                padding: 25px;
-            }
-            .info-card {
-                padding: 20px;
-            }
+            .nav-links { display: none; }
+            .hamburger { display: flex; }
+            .welcome-message { padding: 25px; }
+            .info-card { padding: 20px; }
         }
     </style>
 </head>
@@ -262,58 +74,72 @@
             <a href="about.html">About</a>
             <a href="dashboard.html" id="dashboardLink" style="display:none;">Dashboard</a>
             <a href="admin.html" id="adminLink" style="display:none;">Admin</a>
+            <div id="profileContainer" class="profile-container" style="display:none;">
+                <button class="profile-btn" id="profileBtn">
+                    <div class="profile-avatar" id="profileAvatar">U</div>
+                    <span class="profile-name" id="profileName">User</span>
+                    <span>▼</span>
+                </button>
+                <div class="profile-dropdown" id="profileDropdown">
+                    <div class="dropdown-header">
+                        <div class="dropdown-avatar" id="dropdownAvatar">U</div>
+                        <div class="dropdown-name" id="dropdownName">User Name</div>
+                        <div class="dropdown-email" id="dropdownEmail">user@example.com</div>
+                        <div class="dropdown-role" id="dropdownRole">STUDENT</div>
+                    </div>
+                    <div class="dropdown-divider"></div>
+                    <a href="dashboard.html" class="dropdown-item">📚 My Dashboard</a>
+                    <a href="admin.html" class="dropdown-item" id="dropdownAdmin" style="display:none;">⚙️ Admin Panel</a>
+                    <div class="dropdown-divider"></div>
+                    <div class="dropdown-item dropdown-logout" id="dropdownLogout">🚪 Logout</div>
+                </div>
+            </div>
             <a href="#" id="authBtn">Login / Register</a>
         </div>
-        <button class="hamburger" id="hamburgerBtn">
-            <span></span><span></span><span></span>
-        </button>
+        <button class="hamburger" id="hamburgerBtn"><span></span><span></span><span></span></button>
     </div>
 </nav>
 
 <div class="mobile-menu" id="mobileMenu">
     <button class="close-menu" id="closeMenuBtn">&times;</button>
+    <div id="mobileProfile" class="mobile-profile" style="display:none;">
+        <div class="dropdown-avatar" id="mobileAvatar" style="margin:0 auto 10px;">U</div>
+        <div style="font-size:18px;font-weight:bold" id="mobileName">User Name</div>
+        <div style="font-size:12px;opacity:0.8" id="mobileEmail">user@example.com</div>
+        <div style="margin-top:8px"><span class="dropdown-role" id="mobileRole">STUDENT</span></div>
+    </div>
     <a href="index.html">Home</a>
     <a href="index.html#courses">Courses</a>
     <a href="about.html">About</a>
     <a href="dashboard.html" id="mobileDashboardLink" style="display:none;">Dashboard</a>
     <a href="admin.html" id="mobileAdminLink" style="display:none;">Admin</a>
     <a href="#" id="mobileAuthBtn">Login / Register</a>
+    <a href="#" id="mobileLogoutBtn" style="display:none; color:#ff6b6b;">Logout</a>
 </div>
 
 <section class="about-section">
     <div class="container">
         <h1>About ForexAcademy</h1>
         <div class="about-content">
-
             <div class="welcome-message">
                 <h2>🎯 My Goal: Help You Understand Forex</h2>
                 <p>Forex (trading currencies) can look very scary. There are many big words and confusing charts. Most people feel lost when they start.</p>
                 <p>I am here to help you. I want to take the "hard" out of trading. I teach you how the markets work in a way that is easy to understand. No secrets, no fluff—just the facts.</p>
             </div>
-
             <div class="info-card">
                 <h3>💚 Why is this platform Free?</h3>
                 <p>Most people charge hundreds of dollars for Forex lessons. I don't.</p>
-                <p>Everything on this website is 100% free. I believe that everyone should have the chance to learn a new skill without spending a lot of money first. I want to build a community of smart traders who help each other. You don't need a credit card here—you just need a desire to learn.</p>
+                <p>Everything on this website is 100% free. I believe that everyone should have the chance to learn a new skill without spending a lot of money first. I want to build a community of smart traders who help each other.</p>
             </div>
-
             <div class="info-card">
                 <h3>📚 What You Will Learn</h3>
-                <p>I focus on the most important things for beginners:</p>
-                <ul>
-                    <li><strong>The Basics:</strong> What is a pip? How do you read a chart?</li>
-                    <li><strong>Safety First:</strong> How to trade without losing all your money.</li>
-                    <li><strong>The Truth:</strong> I tell you the reality of trading (it is not a "get rich quick" scheme).</li>
-                </ul>
+                <ul><li><strong>The Basics:</strong> What is a pip? How do you read a chart?</li><li><strong>Safety First:</strong> How to trade without losing all your money.</li><li><strong>The Truth:</strong> I tell you the reality of trading (it is not a "get rich quick" scheme).</li></ul>
             </div>
-
-            <div class="info-card" style="text-align: center;">
+            <div class="info-card" style="text-align:center">
                 <h3>🚀 Ready to Start?</h3>
                 <p>You don't need to be a math genius to trade Forex. You just need a good teacher and a lot of practice.</p>
-                <p>If you are tired of confusing videos and expensive courses, you are in the right place. Let's start learning together today.</p>
                 <a href="index.html#courses" class="btn-start">Start the Free Course</a>
             </div>
-
             <div class="warning-box">
                 <p>⚠️ <strong>Important:</strong> Trading Forex involves risk. You can lose money. Please never trade with money you need for rent or food. My lessons are for education only.</p>
             </div>
@@ -324,93 +150,121 @@
 <div class="social-section">
     <div class="container">
         <h3>📱 Connect With Us</h3>
-        <div class="social-icons">
-            <a href="https://t.me/forexbeginnersstd" target="_blank" class="social-icon telegram" rel="noopener noreferrer">
-                <span>💬</span> Join Our Telegram Channel
-            </a>
-        </div>
+        <div class="social-icons"><a href="https://t.me/forexbeginnersstd" target="_blank" class="social-icon">💬 Join Our Telegram Channel</a></div>
     </div>
 </div>
 
-<footer>
-    <div class="container">
-        <p>&copy; 2026 Forex Academy. All rights reserved. All courses are free.</p>
-    </div>
-</footer>
+<footer><div class="container"><p>&copy; 2026 Forex Academy. All rights reserved.</p></div></footer>
 
 <script>
+    const API_BASE = '/api';
     const token = localStorage.getItem('token');
-    const role = localStorage.getItem('role');
 
-    // Hamburger menu
+    // Profile functions
+    let currentUser = { fullName: localStorage.getItem('fullName') || 'User', email: '', role: localStorage.getItem('role') || 'STUDENT' };
+    async function fetchCurrentUser() {
+        try {
+            const response = await fetch(`${API_BASE}/auth/me`, { headers: { 'Authorization': `Bearer ${token}` } });
+            if (response.ok) { const user = await response.json(); currentUser = { fullName: user.fullName, email: user.email, role: user.role }; }
+        } catch (error) { console.error('Error:', error); }
+    }
+    function updateProfileUI() {
+        const fullName = currentUser.fullName || 'User';
+        const email = currentUser.email || 'user@example.com';
+        const role = currentUser.role || 'STUDENT';
+        const initials = fullName.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+        ['profileAvatar', 'dropdownAvatar', 'mobileAvatar'].forEach(id => { const el = document.getElementById(id); if (el) el.textContent = initials; });
+        const profileName = document.getElementById('profileName'); if (profileName) profileName.textContent = fullName.split(' ')[0];
+        const dropdownName = document.getElementById('dropdownName'); if (dropdownName) dropdownName.textContent = fullName;
+        const dropdownEmail = document.getElementById('dropdownEmail'); if (dropdownEmail) dropdownEmail.textContent = email;
+        const dropdownRole = document.getElementById('dropdownRole'); if (dropdownRole) dropdownRole.textContent = role;
+        document.getElementById('mobileName').textContent = fullName;
+        document.getElementById('mobileEmail').textContent = email;
+        document.getElementById('mobileRole').textContent = role;
+        const dropdownAdmin = document.getElementById('dropdownAdmin');
+        if (dropdownAdmin) dropdownAdmin.style.display = role === 'ADMIN' ? 'block' : 'none';
+    }
+    function initProfileMenu() {
+        const profileBtn = document.getElementById('profileBtn');
+        const profileDropdown = document.getElementById('profileDropdown');
+        if (profileBtn && profileDropdown) {
+            profileBtn.addEventListener('click', (e) => { e.stopPropagation(); profileDropdown.classList.toggle('show'); });
+            document.addEventListener('click', (e) => { if (!profileBtn.contains(e.target) && !profileDropdown.contains(e.target)) profileDropdown.classList.remove('show'); });
+        }
+    }
+    async function handleLogout() {
+        try { if (token) await fetch(`${API_BASE}/auth/logout`, { method: 'POST', headers: { 'Authorization': `Bearer ${token}` } }); }
+        catch (error) { console.error('Logout error:', error); }
+        finally { localStorage.clear(); window.location.href = 'index.html'; }
+    }
+
+    // Hamburger
     const hamburgerBtn = document.getElementById('hamburgerBtn');
     const mobileMenu = document.getElementById('mobileMenu');
     const closeMenuBtn = document.getElementById('closeMenuBtn');
-
-    function closeMobileMenu() {
-        if (hamburgerBtn) hamburgerBtn.classList.remove('active');
-        if (mobileMenu) mobileMenu.style.display = 'none';
-        document.body.style.overflow = 'auto';
-    }
-
-    function openMobileMenu() {
-        if (hamburgerBtn) hamburgerBtn.classList.add('active');
-        if (mobileMenu) mobileMenu.style.display = 'flex';
-        document.body.style.overflow = 'hidden';
-    }
-
+    function closeMobileMenu() { if (hamburgerBtn) hamburgerBtn.classList.remove('active'); if (mobileMenu) mobileMenu.style.display = 'none'; document.body.style.overflow = 'auto'; }
+    function openMobileMenu() { if (hamburgerBtn) hamburgerBtn.classList.add('active'); if (mobileMenu) mobileMenu.style.display = 'flex'; document.body.style.overflow = 'hidden'; }
     if (hamburgerBtn) hamburgerBtn.addEventListener('click', openMobileMenu);
     if (closeMenuBtn) closeMenuBtn.addEventListener('click', closeMobileMenu);
-    if (mobileMenu) {
-        mobileMenu.addEventListener('click', (e) => {
-            if (e.target === mobileMenu) closeMobileMenu();
-        });
-        mobileMenu.querySelectorAll('a').forEach(link => {
-            link.addEventListener('click', closeMobileMenu);
-        });
+
+    function updateNavigation() {
+        const loggedIn = !!token;
+        const role = localStorage.getItem('role');
+        const dashboardLink = document.getElementById('dashboardLink');
+        const adminLink = document.getElementById('adminLink');
+        const authBtn = document.getElementById('authBtn');
+        const profileContainer = document.getElementById('profileContainer');
+        const mobileDashboard = document.getElementById('mobileDashboardLink');
+        const mobileAdmin = document.getElementById('mobileAdminLink');
+        const mobileAuthBtn = document.getElementById('mobileAuthBtn');
+        const mobileLogoutBtn = document.getElementById('mobileLogoutBtn');
+        const mobileProfile = document.getElementById('mobileProfile');
+
+        if (loggedIn) {
+            if (profileContainer) profileContainer.style.display = 'inline-block';
+            if (authBtn) authBtn.style.display = 'none';
+            if (dashboardLink) { dashboardLink.style.display = 'block'; dashboardLink.href = 'dashboard.html'; }
+            if (role === 'ADMIN' && adminLink) { adminLink.style.display = 'block'; adminLink.href = 'admin.html'; }
+            if (mobileDashboard) mobileDashboard.style.display = 'block';
+            if (role === 'ADMIN' && mobileAdmin) mobileAdmin.style.display = 'block';
+            if (mobileAuthBtn) mobileAuthBtn.style.display = 'none';
+            if (mobileLogoutBtn) { mobileLogoutBtn.style.display = 'block'; mobileLogoutBtn.onclick = (e) => { e.preventDefault(); handleLogout(); }; }
+            if (mobileProfile) mobileProfile.style.display = 'block';
+        } else {
+            if (profileContainer) profileContainer.style.display = 'none';
+            if (authBtn) authBtn.style.display = 'inline-block';
+            if (dashboardLink) dashboardLink.style.display = 'none';
+            if (adminLink) adminLink.style.display = 'none';
+            if (mobileDashboard) mobileDashboard.style.display = 'none';
+            if (mobileAdmin) mobileAdmin.style.display = 'none';
+            if (mobileAuthBtn) mobileAuthBtn.style.display = 'block';
+            if (mobileLogoutBtn) mobileLogoutBtn.style.display = 'none';
+            if (mobileProfile) mobileProfile.style.display = 'none';
+        }
     }
 
-    function logout() {
-        localStorage.clear();
-        window.location.href = 'index.html';
-    }
-
-    const dashboardLink = document.getElementById('dashboardLink');
-    const adminLink = document.getElementById('adminLink');
     const authBtn = document.getElementById('authBtn');
-    const mobileDashboard = document.getElementById('mobileDashboardLink');
-    const mobileAdmin = document.getElementById('mobileAdminLink');
     const mobileAuthBtn = document.getElementById('mobileAuthBtn');
-
-    if (token) {
-        if (authBtn) {
-            authBtn.innerHTML = 'Logout';
-            authBtn.onclick = logout;
-        }
-        if (dashboardLink) {
-            dashboardLink.style.display = 'block';
-            dashboardLink.href = 'dashboard.html';
-        }
-        if (role === 'ADMIN' && adminLink) {
-            adminLink.style.display = 'block';
-            adminLink.href = 'admin.html';
-        }
-        if (mobileAuthBtn) {
-            mobileAuthBtn.innerHTML = 'Logout';
-            mobileAuthBtn.onclick = () => { logout(); closeMobileMenu(); };
-        }
-        if (mobileDashboard) {
-            mobileDashboard.style.display = 'block';
-            mobileDashboard.href = 'dashboard.html';
-        }
-        if (role === 'ADMIN' && mobileAdmin) {
-            mobileAdmin.style.display = 'block';
-            mobileAdmin.href = 'admin.html';
-        }
-    } else {
-        if (authBtn) authBtn.innerHTML = 'Login / Register';
-        if (mobileAuthBtn) mobileAuthBtn.innerHTML = 'Login / Register';
+    if (authBtn) {
+        authBtn.onclick = (e) => {
+            e.preventDefault();
+            if (token) { localStorage.clear(); window.location.reload(); }
+            else { document.getElementById('authModal') ? document.getElementById('authModal').style.display = 'block' : alert('Please go to home page to login'); }
+        };
     }
+    if (mobileAuthBtn) {
+        mobileAuthBtn.onclick = (e) => {
+            e.preventDefault();
+            if (token) { localStorage.clear(); window.location.reload(); }
+            else { document.getElementById('authModal') ? document.getElementById('authModal').style.display = 'block' : alert('Please go to home page to login'); closeMobileMenu(); }
+        };
+    }
+
+    const dropdownLogout = document.getElementById('dropdownLogout');
+    if (dropdownLogout) dropdownLogout.addEventListener('click', handleLogout);
+
+    fetchCurrentUser().then(() => { updateProfileUI(); initProfileMenu(); });
+    updateNavigation();
 </script>
 </body>
 </html>
