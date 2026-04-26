@@ -38,10 +38,10 @@ public class AdminController {
     @Autowired
     private UserRepository userRepository;
 
-    @Value("${video.upload.path}")
+    @Value("${video.upload.path:uploads/videos/}")
     private String videoUploadPath;
 
-    @Value("${thumbnail.upload.path}")
+    @Value("${thumbnail.upload.path:uploads/thumbnails/}")
     private String thumbnailUploadPath;
 
     // ============================================
@@ -124,12 +124,34 @@ public class AdminController {
             if (course == null) {
                 return ResponseEntity.notFound().build();
             }
+
+            // Delete associated video files
             if (course.getVideos() != null && !course.getVideos().isEmpty()) {
                 ArrayList<Video> videosToDelete = new ArrayList<>(course.getVideos());
                 for (Video video : videosToDelete) {
+                    // Delete physical video file if exists
+                    String videoUrl = video.getVideoUrl();
+                    if (videoUrl != null && videoUrl.startsWith("/uploads/videos/")) {
+                        String filename = videoUrl.replace("/uploads/videos/", "");
+                        File videoFile = new File(videoUploadPath + filename);
+                        if (videoFile.exists()) {
+                            videoFile.delete();
+                        }
+                    }
                     videoRepository.delete(video);
                 }
             }
+
+            // Delete associated PDF file
+            if (course.getPdfUrl() != null) {
+                String pdfPath = "." + course.getPdfUrl();
+                File pdfFile = new File(pdfPath);
+                if (pdfFile.exists()) {
+                    pdfFile.delete();
+                    System.out.println("Deleted PDF file: " + pdfPath);
+                }
+            }
+
             courseRepository.delete(course);
             Map<String, Object> response = new HashMap<>();
             response.put("success", true);
@@ -171,6 +193,18 @@ public class AdminController {
             if (video == null) {
                 return ResponseEntity.notFound().build();
             }
+
+            // Delete physical video file
+            String videoUrl = video.getVideoUrl();
+            if (videoUrl != null && videoUrl.startsWith("/uploads/videos/")) {
+                String filename = videoUrl.replace("/uploads/videos/", "");
+                File videoFile = new File(videoUploadPath + filename);
+                if (videoFile.exists()) {
+                    videoFile.delete();
+                    System.out.println("Deleted video file: " + filename);
+                }
+            }
+
             videoRepository.delete(video);
             Map<String, Object> response = new HashMap<>();
             response.put("success", true);
@@ -197,21 +231,44 @@ public class AdminController {
                 return ResponseEntity.notFound().build();
             }
 
+            // Validate file type
             String contentType = file.getContentType();
             if (contentType == null || !contentType.equals("application/pdf")) {
                 return ResponseEntity.badRequest().body(Map.of("error", "Only PDF files are allowed"));
             }
 
-            File pdfDirectory = new File("./uploads/pdfs/");
-            if (!pdfDirectory.exists()) {
-                pdfDirectory.mkdirs();
+            // Validate file size (max 50MB)
+            if (file.getSize() > 50 * 1024 * 1024) {
+                return ResponseEntity.badRequest().body(Map.of("error", "File size must be less than 50MB"));
             }
 
+            // Create directory if it doesn't exist
+            File pdfDirectory = new File("uploads/pdfs/");
+            if (!pdfDirectory.exists()) {
+                boolean created = pdfDirectory.mkdirs();
+                System.out.println("Created PDF directory: " + created);
+            }
+
+            // Delete old PDF if exists
+            if (course.getPdfUrl() != null) {
+                String oldPdfPath = "." + course.getPdfUrl();
+                File oldFile = new File(oldPdfPath);
+                if (oldFile.exists()) {
+                    oldFile.delete();
+                    System.out.println("Deleted old PDF: " + oldPdfPath);
+                }
+            }
+
+            // Generate unique filename
             String originalFilename = file.getOriginalFilename();
             String filename = UUID.randomUUID().toString() + "_" + originalFilename;
-            String filePath = "./uploads/pdfs/" + filename;
-            Files.write(Paths.get(filePath), file.getBytes());
+            String filePath = "uploads/pdfs/" + filename;
 
+            // Save file
+            Path path = Paths.get(filePath);
+            Files.write(path, file.getBytes());
+
+            // Update course with PDF URL
             String pdfUrl = "/uploads/pdfs/" + filename;
             String pdfTitle = originalFilename.replace(".pdf", "");
 
@@ -220,14 +277,22 @@ public class AdminController {
             course.setPdfSize(file.getSize());
             courseRepository.save(course);
 
+            System.out.println("✅ PDF uploaded for course: " + course.getTitle());
+            System.out.println("   File path: " + filePath);
+            System.out.println("   PDF URL: " + pdfUrl);
+            System.out.println("   File size: " + file.getSize() + " bytes");
+
             Map<String, Object> response = new HashMap<>();
             response.put("success", true);
             response.put("pdfUrl", pdfUrl);
             response.put("pdfTitle", pdfTitle);
             response.put("pdfSize", file.getSize());
+
             return ResponseEntity.ok(response);
 
         } catch (IOException e) {
+            System.err.println("❌ Error uploading PDF: " + e.getMessage());
+            e.printStackTrace();
             return ResponseEntity.status(500).body(Map.of("error", e.getMessage()));
         }
     }
@@ -240,12 +305,17 @@ public class AdminController {
                 return ResponseEntity.notFound().build();
             }
 
+            // Delete physical file
             String filePath = "." + course.getPdfUrl();
             File pdfFile = new File(filePath);
             if (pdfFile.exists()) {
-                pdfFile.delete();
+                boolean deleted = pdfFile.delete();
+                System.out.println("PDF file deleted: " + deleted + " - " + filePath);
+            } else {
+                System.out.println("PDF file not found: " + filePath);
             }
 
+            // Remove PDF reference from course
             course.setPdfUrl(null);
             course.setPdfTitle(null);
             course.setPdfSize(null);
@@ -273,7 +343,7 @@ public class AdminController {
     }
 
     // ============================================
-    // FILE UPLOADS
+    // FILE UPLOADS (Thumbnail)
     // ============================================
 
     @PostMapping("/upload/thumbnail")
@@ -283,6 +353,7 @@ public class AdminController {
             if (!directory.exists()) {
                 directory.mkdirs();
             }
+
             String originalFilename = file.getOriginalFilename();
             String extension = "";
             if (originalFilename != null && originalFilename.contains(".")) {
@@ -292,7 +363,11 @@ public class AdminController {
             Path path = Paths.get(thumbnailUploadPath + filename);
             Files.write(path, file.getBytes());
             String thumbnailUrl = "/uploads/thumbnails/" + filename;
-            return ResponseEntity.ok(Map.of("success", true, "thumbnailUrl", thumbnailUrl));
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("thumbnailUrl", thumbnailUrl);
+            return ResponseEntity.ok(response);
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", e.getMessage()));
         }
@@ -347,6 +422,27 @@ public class AdminController {
             user.setRole("STUDENT");
             userRepository.save(user);
             return ResponseEntity.ok(Map.of("success", true, "message", "Admin role removed"));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", e.getMessage()));
+        }
+    }
+
+    @DeleteMapping("/users/{userId}")
+    public ResponseEntity<?> deleteUser(@PathVariable Long userId) {
+        try {
+            User user = userRepository.findById(userId).orElse(null);
+            if (user == null) {
+                return ResponseEntity.notFound().build();
+            }
+
+            // Prevent deleting the last admin
+            long adminCount = userRepository.findAll().stream().filter(u -> "ADMIN".equals(u.getRole())).count();
+            if ("ADMIN".equals(user.getRole()) && adminCount <= 1) {
+                return ResponseEntity.badRequest().body(Map.of("error", "Cannot delete the last admin user"));
+            }
+
+            userRepository.delete(user);
+            return ResponseEntity.ok(Map.of("success", true, "message", "User deleted successfully"));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", e.getMessage()));
         }
