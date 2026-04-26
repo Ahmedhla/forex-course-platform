@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -31,27 +32,37 @@ public class CourseController {
     @Autowired
     private VideoProgressRepository videoProgressRepository;
 
-    // Get all public courses
     @GetMapping("/public")
     public ResponseEntity<List<Course>> getAllCourses() {
         return ResponseEntity.ok(courseRepository.findAll());
     }
 
-    // Get a specific course by ID
     @GetMapping("/public/{id}")
-    public ResponseEntity<Course> getCourse(@PathVariable Long id) {
-        return courseRepository.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<Map<String, Object>> getCourse(@PathVariable Long id) {
+        Course course = courseRepository.findById(id).orElse(null);
+        if (course == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("id", course.getId());
+        response.put("title", course.getTitle());
+        response.put("description", course.getDescription());
+        response.put("price", course.getPrice());
+        response.put("thumbnailUrl", course.getThumbnailUrl());
+        response.put("videos", course.getVideos());
+        response.put("pdfUrl", course.getPdfUrl());
+        response.put("pdfTitle", course.getPdfTitle());
+        response.put("pdfSize", course.getPdfSize());
+
+        return ResponseEntity.ok(response);
     }
 
-    // Get my courses (all courses are free)
     @GetMapping("/my-courses")
     public ResponseEntity<List<Course>> getMyCourses() {
         return ResponseEntity.ok(courseRepository.findAll());
     }
 
-    // Get videos for a course
     @GetMapping("/{courseId}/videos")
     public ResponseEntity<?> getCourseVideos(@PathVariable Long courseId) {
         Course course = courseRepository.findById(courseId).orElse(null);
@@ -61,7 +72,6 @@ public class CourseController {
         return ResponseEntity.ok(course.getVideos());
     }
 
-    // Update video progress
     @PostMapping("/progress/{videoId}")
     public ResponseEntity<?> updateProgress(@PathVariable Long videoId, @RequestBody Map<String, Integer> request) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -87,7 +97,6 @@ public class CourseController {
         return ResponseEntity.ok(Map.of("success", true));
     }
 
-    // Get video progress
     @GetMapping("/progress/{videoId}")
     public ResponseEntity<?> getProgress(@PathVariable Long videoId) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();

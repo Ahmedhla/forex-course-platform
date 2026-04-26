@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel - Forex Academy</title>
     <style>
         * {
@@ -19,8 +19,6 @@
             margin: 0 auto;
             padding: 0 20px;
         }
-
-        /* Navbar */
         .navbar {
             background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
             color: white;
@@ -35,79 +33,11 @@
             font-size: 1.5rem;
             font-weight: bold;
         }
-        .nav-links {
-            display: flex;
-            align-items: center;
-            gap: 2rem;
-        }
         .nav-links a {
             color: white;
             text-decoration: none;
+            margin-left: 2rem;
         }
-        .nav-links a:hover {
-            color: #ffd700;
-        }
-
-        /* Hamburger */
-        .hamburger {
-            display: none;
-            flex-direction: column;
-            cursor: pointer;
-            background: none;
-            border: none;
-            padding: 10px;
-        }
-        .hamburger span {
-            width: 25px;
-            height: 3px;
-            background: white;
-            margin: 3px 0;
-            transition: 0.3s;
-            border-radius: 2px;
-        }
-        .hamburger.active span:nth-child(1) {
-            transform: rotate(45deg) translate(6px, 6px);
-        }
-        .hamburger.active span:nth-child(2) {
-            opacity: 0;
-        }
-        .hamburger.active span:nth-child(3) {
-            transform: rotate(-45deg) translate(6px, -6px);
-        }
-
-        /* Mobile Menu */
-        .mobile-menu {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.95);
-            z-index: 999;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            gap: 30px;
-        }
-        .mobile-menu a {
-            color: white;
-            text-decoration: none;
-            font-size: 1.5rem;
-            padding: 15px;
-        }
-        .close-menu {
-            position: absolute;
-            top: 20px;
-            right: 30px;
-            font-size: 40px;
-            color: white;
-            cursor: pointer;
-            background: none;
-            border: none;
-        }
-
-        /* Admin Panel Styles */
         .admin-tabs {
             display: flex;
             gap: 10px;
@@ -120,7 +50,6 @@
             border: none;
             cursor: pointer;
             border-radius: 5px;
-            font-size: 16px;
         }
         .tab-btn.active {
             background: #667eea;
@@ -166,14 +95,6 @@
             border-radius: 5px;
             cursor: pointer;
         }
-        .btn-primary {
-            background: #007bff;
-            color: white;
-            padding: 8px 15px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
         form input, form textarea, form select {
             width: 100%;
             padding: 10px;
@@ -187,8 +108,6 @@
             background: #f5f5f5;
             border-radius: 5px;
         }
-
-        /* User Table Styles */
         .user-table {
             width: 100%;
             border-collapse: collapse;
@@ -201,9 +120,6 @@
         .user-table th {
             background: #667eea;
             color: white;
-        }
-        .user-table tr:hover {
-            background: #f5f5f5;
         }
         .role-badge {
             display: inline-block;
@@ -249,34 +165,12 @@
             font-size: 1.8rem;
             color: #667eea;
         }
-
         @media (max-width: 768px) {
-            .nav-links {
-                display: none;
-            }
-            .hamburger {
-                display: flex;
-            }
             .admin-tabs {
                 flex-direction: column;
             }
             .tab-btn {
                 width: 100%;
-            }
-            .user-table, .user-table thead, .user-table tbody, .user-table th, .user-table td, .user-table tr {
-                display: block;
-            }
-            .user-table th {
-                display: none;
-            }
-            .user-table td {
-                display: flex;
-                justify-content: space-between;
-                padding: 10px;
-            }
-            .user-table td::before {
-                content: attr(data-label);
-                font-weight: bold;
             }
         }
     </style>
@@ -289,17 +183,8 @@
             <a href="index.html">Home</a>
             <a href="#" id="logoutBtn">Logout</a>
         </div>
-        <button class="hamburger" id="hamburgerBtn">
-            <span></span><span></span><span></span>
-        </button>
     </div>
 </nav>
-
-<div class="mobile-menu" id="mobileMenu">
-    <button class="close-menu" id="closeMenuBtn">&times;</button>
-    <a href="index.html">Home</a>
-    <a href="#" id="mobileLogoutBtn">Logout</a>
-</div>
 
 <div class="container">
     <h1>Admin Panel</h1>
@@ -307,7 +192,7 @@
     <div class="admin-tabs">
         <button class="tab-btn active" onclick="showTab('courses')">Manage Courses</button>
         <button class="tab-btn" onclick="showTab('addCourse')">Add New Course</button>
-        <button class="tab-btn" onclick="showTab('users')">👥 Manage Users</button>
+        <button class="tab-btn" onclick="showTab('users')">Manage Users</button>
     </div>
 
     <!-- Manage Courses Tab -->
@@ -338,12 +223,23 @@
             </form>
             <div id="videoList"></div>
         </div>
+
+        <!-- PDF Material Section -->
+        <div id="pdfSection" style="display:none; margin-top: 30px; padding: 20px; background: #f0f8ff; border-radius: 10px;">
+            <h3>📚 Course Material (PDF)</h3>
+            <div id="pdfInfo" style="margin-bottom: 15px;">
+                <p>No PDF material uploaded yet.</p>
+            </div>
+            <form id="pdfUploadForm" enctype="multipart/form-data">
+                <input type="file" id="pdfFile" accept="application/pdf">
+                <button type="submit" class="btn-success" style="background: #ffc107; color: #333;">📄 Upload PDF Material</button>
+            </form>
+        </div>
     </div>
 
     <!-- Manage Users Tab -->
     <div id="usersTab" class="tab-content" style="display:none;">
-        <h2>👥 User Management</h2>
-
+        <h2>User Management</h2>
         <div class="stats" id="stats">
             <div class="stat-card">
                 <h3 id="totalUsers">0</h3>
@@ -358,30 +254,17 @@
                 <p>Students</p>
             </div>
         </div>
-
         <div class="search-box">
-            <input type="text" id="searchInput" placeholder="Search by email or name..." onkeyup="searchUsers()">
-            <button class="btn-primary" onclick="searchUsers()">🔍 Search</button>
-            <button class="btn-success" onclick="exportUsers()">📥 Export CSV</button>
-            <button class="btn-secondary" onclick="fetchUsers()">🔄 Refresh</button>
+            <input type="text" id="searchInput" placeholder="Search by email or name...">
+            <button class="btn-secondary" onclick="searchUsers()">Search</button>
+            <button class="btn-success" onclick="exportUsers()">Export CSV</button>
+            <button class="btn-secondary" onclick="fetchUsers()">Refresh</button>
         </div>
-
-        <div id="userMessage" class="message" style="display:none;"></div>
-
         <table class="user-table">
             <thead>
-            <tr>
-                <th>ID</th>
-                <th>Email</th>
-                <th>Full Name</th>
-                <th>Role</th>
-                <th>Registered</th>
-                <th>Actions</th>
-            </tr>
+            <tr><th>ID</th><th>Email</th><th>Full Name</th><th>Role</th><th>Registered</th><th>Actions</th></tr>
             </thead>
-            <tbody id="userTableBody">
-            <tr><td colspan="6">Loading users...</td></tr>
-            </tbody>
+            <tbody id="userTableBody"><tr><td colspan="6">Loading...</td></tr></tbody>
         </table>
     </div>
 </div>
@@ -395,48 +278,15 @@
         window.location.href = 'index.html';
     }
 
-    // Hamburger menu
-    const hamburgerBtn = document.getElementById('hamburgerBtn');
-    const mobileMenu = document.getElementById('mobileMenu');
-    const closeMenuBtn = document.getElementById('closeMenuBtn');
-
-    function closeMobileMenu() {
-        if (hamburgerBtn) hamburgerBtn.classList.remove('active');
-        if (mobileMenu) mobileMenu.style.display = 'none';
-        document.body.style.overflow = 'auto';
-    }
-
-    function openMobileMenu() {
-        if (hamburgerBtn) hamburgerBtn.classList.add('active');
-        if (mobileMenu) mobileMenu.style.display = 'flex';
-        document.body.style.overflow = 'hidden';
-    }
-
-    if (hamburgerBtn) hamburgerBtn.addEventListener('click', openMobileMenu);
-    if (closeMenuBtn) closeMenuBtn.addEventListener('click', closeMobileMenu);
-    if (mobileMenu) {
-        mobileMenu.addEventListener('click', (e) => {
-            if (e.target === mobileMenu) closeMobileMenu();
-        });
-        mobileMenu.querySelectorAll('a').forEach(link => {
-            link.addEventListener('click', closeMobileMenu);
-        });
-    }
-
-    function logout() {
+    document.getElementById('logoutBtn').onclick = () => {
         localStorage.clear();
         window.location.href = 'index.html';
-    }
-
-    document.getElementById('logoutBtn').onclick = logout;
-    const mobileLogoutBtn = document.getElementById('mobileLogoutBtn');
-    if (mobileLogoutBtn) mobileLogoutBtn.onclick = logout;
+    };
 
     function showTab(tab) {
         document.getElementById('coursesTab').style.display = tab === 'courses' ? 'block' : 'none';
         document.getElementById('addCourseTab').style.display = tab === 'addCourse' ? 'block' : 'none';
         document.getElementById('usersTab').style.display = tab === 'users' ? 'block' : 'none';
-
         if (tab === 'courses') loadCourses();
         if (tab === 'users') fetchUsers();
     }
@@ -452,17 +302,15 @@
             });
             const courses = await response.json();
             const container = document.getElementById('coursesList');
-
             if (courses.length === 0) {
                 container.innerHTML = '<p>No courses yet.</p>';
                 return;
             }
-
             container.innerHTML = courses.map(course => `
                     <div class="admin-course-item">
                         <div><strong>${escapeHtml(course.title)}</strong><br>FREE | ${course.videos?.length || 0} videos</div>
                         <div>
-                            <button onclick="viewCourseVideos(${course.id})" class="btn-secondary">View Videos</button>
+                            <button onclick="viewCourseVideos(${course.id})" class="btn-secondary">Manage Content</button>
                             <button onclick="deleteCourse(${course.id})" class="btn-danger">Delete Course</button>
                         </div>
                     </div>
@@ -473,7 +321,7 @@
     }
 
     async function deleteCourse(courseId) {
-        if (confirm('Delete this course? ALL videos will be deleted!')) {
+        if (confirm('Delete this course? ALL content will be deleted!')) {
             try {
                 await fetch(`${API_BASE}/admin/courses/${courseId}`, {
                     method: 'DELETE',
@@ -505,6 +353,10 @@
 
     async function viewCourseVideos(courseId) {
         await loadCourseVideos(courseId);
+        await loadCoursePdf(courseId);
+        document.getElementById('courseSelect').value = courseId;
+        document.getElementById('videoSection').style.display = 'block';
+        document.getElementById('pdfSection').style.display = 'block';
     }
 
     async function loadCourseVideos(courseId) {
@@ -514,12 +366,10 @@
             });
             const course = await response.json();
             const videoListDiv = document.getElementById('videoList');
-
             if (!course.videos || course.videos.length === 0) {
                 videoListDiv.innerHTML = '<p>No videos yet.</p>';
                 return;
             }
-
             videoListDiv.innerHTML = '<h4>YouTube Videos:</h4>';
             course.videos.forEach(video => {
                 const minutes = video.duration ? Math.floor(video.duration / 60) : '?';
@@ -533,9 +383,6 @@
                         </div>
                     `;
             });
-
-            document.getElementById('courseSelect').value = courseId;
-            document.getElementById('videoSection').style.display = 'block';
         } catch (error) {
             console.error('Error:', error);
         }
@@ -561,7 +408,6 @@
             price: 0
         };
         const thumbnail = document.getElementById('courseThumbnail').files[0];
-
         try {
             let thumbnailUrl = null;
             if (thumbnail) {
@@ -576,14 +422,12 @@
                 if (uploadResult.thumbnailUrl) thumbnailUrl = uploadResult.thumbnailUrl;
             }
             if (thumbnailUrl) course.thumbnailUrl = thumbnailUrl;
-
             const createResponse = await fetch(`${API_BASE}/admin/courses`, {
                 method: 'POST',
                 headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
                 body: JSON.stringify(course)
             });
-            const result = await createResponse.json();
-            alert(`Course created!`);
+            alert('Course created!');
             document.getElementById('courseForm').reset();
             document.getElementById('videoSection').style.display = 'block';
             await loadCourseSelect();
@@ -597,14 +441,12 @@
         e.preventDefault();
         const courseId = document.getElementById('courseSelect').value;
         if (!courseId) { alert('Select a course'); return; }
-
         const videoData = {
             title: document.getElementById('videoTitle').value,
             description: document.getElementById('videoDesc').value,
             videoUrl: document.getElementById('youtubeUrl').value,
             duration: parseInt(document.getElementById('videoDuration').value) || 0
         };
-
         try {
             const addResponse = await fetch(`${API_BASE}/admin/courses/${courseId}/videos`, {
                 method: 'POST',
@@ -625,6 +467,88 @@
     };
 
     // ============================================
+    // PDF MANAGEMENT
+    // ============================================
+
+    async function loadCoursePdf(courseId) {
+        try {
+            const response = await fetch(`${API_BASE}/admin/courses/${courseId}`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            const course = await response.json();
+            const pdfDiv = document.getElementById('pdfInfo');
+            if (course.pdfUrl && course.pdfUrl !== '') {
+                const fileSizeMB = course.pdfSize ? (course.pdfSize / 1024 / 1024).toFixed(2) : 'Unknown';
+                pdfDiv.innerHTML = `
+                        <div style="background: #d4edda; padding: 15px; border-radius: 8px;">
+                            <strong>✅ PDF Available:</strong> ${escapeHtml(course.pdfTitle || 'Course Material')}<br>
+                            <small>Size: ${fileSizeMB} MB</small><br><br>
+                            <a href="${course.pdfUrl}" target="_blank" class="btn-secondary">View PDF</a>
+                            <button onclick="deletePdf(${courseId})" class="btn-danger">Delete PDF</button>
+                        </div>
+                    `;
+            } else {
+                pdfDiv.innerHTML = '<p>No PDF material uploaded yet.</p>';
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
+    async function deletePdf(courseId) {
+        if (!confirm('Delete this PDF?')) return;
+        try {
+            const response = await fetch(`${API_BASE}/admin/courses/${courseId}/delete-pdf`, {
+                method: 'DELETE',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (response.ok) {
+                alert('PDF deleted!');
+                loadCoursePdf(courseId);
+            } else {
+                alert('Error deleting PDF');
+            }
+        } catch (error) {
+            alert('Error: ' + error.message);
+        }
+    }
+
+    document.getElementById('pdfUploadForm').onsubmit = async (e) => {
+        e.preventDefault();
+        const courseId = document.getElementById('courseSelect').value;
+        if (!courseId) { alert('Select a course'); return; }
+        const pdfFile = document.getElementById('pdfFile').files[0];
+        if (!pdfFile) { alert('Select a PDF file'); return; }
+        if (pdfFile.type !== 'application/pdf') { alert('Only PDF files allowed'); return; }
+        const formData = new FormData();
+        formData.append('file', pdfFile);
+        const submitBtn = document.querySelector('#pdfUploadForm button[type="submit"]');
+        const originalText = submitBtn.textContent;
+        submitBtn.textContent = 'Uploading...';
+        submitBtn.disabled = true;
+        try {
+            const response = await fetch(`${API_BASE}/admin/courses/${courseId}/upload-pdf`, {
+                method: 'POST',
+                headers: { 'Authorization': `Bearer ${token}` },
+                body: formData
+            });
+            if (response.ok) {
+                alert('PDF uploaded!');
+                document.getElementById('pdfFile').value = '';
+                loadCoursePdf(courseId);
+            } else {
+                const error = await response.json();
+                alert('Error: ' + (error.error || 'Upload failed'));
+            }
+        } catch (error) {
+            alert('Error: ' + error.message);
+        } finally {
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
+        }
+    };
+
+    // ============================================
     // USER MANAGEMENT
     // ============================================
 
@@ -635,49 +559,37 @@
             const response = await fetch(`${API_BASE}/admin/users`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
-
-            if (!response.ok) throw new Error('Failed to fetch users');
-
             const users = await response.json();
             allUsers = users;
             updateStats(users);
             displayUsers(users);
         } catch (error) {
             console.error('Error:', error);
-            document.getElementById('userTableBody').innerHTML = '<tr><td colspan="6">Error loading users</td></tr>';
         }
     }
 
     function updateStats(users) {
-        const totalUsers = users.length;
-        const admins = users.filter(u => u.role === 'ADMIN').length;
-        const students = users.filter(u => u.role === 'STUDENT').length;
-
-        document.getElementById('totalUsers').innerText = totalUsers;
-        document.getElementById('totalAdmins').innerText = admins;
-        document.getElementById('totalStudents').innerText = students;
+        document.getElementById('totalUsers').innerText = users.length;
+        document.getElementById('totalAdmins').innerText = users.filter(u => u.role === 'ADMIN').length;
+        document.getElementById('totalStudents').innerText = users.filter(u => u.role === 'STUDENT').length;
     }
 
     function displayUsers(users) {
         const tbody = document.getElementById('userTableBody');
-
         if (users.length === 0) {
             tbody.innerHTML = '<tr><td colspan="6">No users found</td></tr>';
             return;
         }
-
         tbody.innerHTML = users.map(user => `
                 <tr>
-                    <td data-label="ID">${user.id}</td>
-                    <td data-label="Email">${escapeHtml(user.email)}</td>
-                    <td data-label="Full Name">${escapeHtml(user.fullName)}</td>
-                    <td data-label="Role">
-                        <span class="role-badge role-${user.role.toLowerCase()}">${user.role}</span>
-                    </td>
-                    <td data-label="Registered">${formatDate(user.createdAt)}</td>
-                    <td data-label="Actions">
+                    <td>${user.id}</td>
+                    <td>${escapeHtml(user.email)}</td>
+                    <td>${escapeHtml(user.fullName)}</td>
+                    <td><span class="role-badge role-${user.role.toLowerCase()}">${user.role}</span></td>
+                    <td>${user.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A'}</td>
+                    <td>
                         ${user.role !== 'ADMIN' ?
-            `<button class="btn-primary" onclick="makeAdmin(${user.id})">Make Admin</button>` :
+            `<button class="btn-secondary" onclick="makeAdmin(${user.id})">Make Admin</button>` :
             `<button class="btn-danger" onclick="removeAdmin(${user.id})">Remove Admin</button>`
         }
                     </td>
@@ -686,104 +598,50 @@
     }
 
     function searchUsers() {
-        const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-        const filtered = allUsers.filter(user =>
-            user.email.toLowerCase().includes(searchTerm) ||
-            user.fullName.toLowerCase().includes(searchTerm)
-        );
+        const term = document.getElementById('searchInput').value.toLowerCase();
+        const filtered = allUsers.filter(u => u.email.toLowerCase().includes(term) || u.fullName.toLowerCase().includes(term));
         displayUsers(filtered);
     }
 
     async function makeAdmin(userId) {
         if (!confirm('Make this user an admin?')) return;
-
         try {
-            const response = await fetch(`${API_BASE}/admin/users/${userId}/make-admin`, {
+            await fetch(`${API_BASE}/admin/users/${userId}/make-admin`, {
                 method: 'PUT',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                }
+                headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }
             });
-
-            if (response.ok) {
-                showUserMessage('User is now an admin!', 'success');
-                fetchUsers();
-            } else {
-                showUserMessage('Failed to make user admin', 'error');
-            }
+            alert('User is now admin');
+            fetchUsers();
         } catch (error) {
-            showUserMessage('Error: ' + error.message, 'error');
+            alert('Error: ' + error.message);
         }
     }
 
     async function removeAdmin(userId) {
-        if (!confirm('Remove admin role from this user?')) return;
-
+        if (!confirm('Remove admin role?')) return;
         try {
-            const response = await fetch(`${API_BASE}/admin/users/${userId}/remove-admin`, {
+            await fetch(`${API_BASE}/admin/users/${userId}/remove-admin`, {
                 method: 'PUT',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                }
+                headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }
             });
-
-            if (response.ok) {
-                showUserMessage('Admin role removed', 'success');
-                fetchUsers();
-            } else {
-                showUserMessage('Failed to remove admin role', 'error');
-            }
+            alert('Admin role removed');
+            fetchUsers();
         } catch (error) {
-            showUserMessage('Error: ' + error.message, 'error');
+            alert('Error: ' + error.message);
         }
     }
 
     function exportUsers() {
-        if (allUsers.length === 0) {
-            showUserMessage('No users to export', 'error');
-            return;
-        }
-
         const headers = ['ID', 'Email', 'Full Name', 'Role', 'Registered Date'];
-        const rows = allUsers.map(user => [
-            user.id,
-            user.email,
-            user.fullName,
-            user.role,
-            user.createdAt || 'N/A'
-        ]);
-
-        const csvContent = [headers, ...rows].map(row => row.join(',')).join('\n');
-
-        const blob = new Blob([csvContent], { type: 'text/csv' });
+        const rows = allUsers.map(u => [u.id, u.email, u.fullName, u.role, u.createdAt || 'N/A']);
+        const csv = [headers, ...rows].map(row => row.join(',')).join('\n');
+        const blob = new Blob([csv], { type: 'text/csv' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
         a.download = `users_export_${new Date().toISOString().split('T')[0]}.csv`;
-        document.body.appendChild(a);
         a.click();
-        document.body.removeChild(a);
         URL.revokeObjectURL(url);
-
-        showUserMessage('Users exported successfully!', 'success');
-    }
-
-    function formatDate(dateString) {
-        if (!dateString) return 'N/A';
-        const date = new Date(dateString);
-        return date.toLocaleDateString();
-    }
-
-    function showUserMessage(msg, type) {
-        const messageDiv = document.getElementById('userMessage');
-        messageDiv.style.display = 'block';
-        messageDiv.className = `message ${type}`;
-        messageDiv.innerHTML = msg;
-        setTimeout(() => {
-            messageDiv.style.display = 'none';
-        }, 3000);
     }
 
     function escapeHtml(text) {
@@ -793,7 +651,6 @@
         return div.innerHTML;
     }
 
-    // Initial load
     loadCourses();
     loadCourseSelect();
 </script>

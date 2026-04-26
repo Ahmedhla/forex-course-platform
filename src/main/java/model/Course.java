@@ -22,12 +22,21 @@ public class Course {
 
     private String thumbnailUrl;
 
+    // PDF Material Fields
+    @Column(name = "pdf_url")
+    private String pdfUrl;
+
+    @Column(name = "pdf_title")
+    private String pdfTitle;
+
+    @Column(name = "pdf_size")
+    private Long pdfSize;
+
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("orderNumber ASC")
     @JsonIgnore
     private List<Video> videos = new ArrayList<>();
 
-    // Constructors
     public Course() {}
 
     public Course(String title, String description) {
@@ -75,6 +84,30 @@ public class Course {
 
     public void setThumbnailUrl(String thumbnailUrl) {
         this.thumbnailUrl = thumbnailUrl;
+    }
+
+    public String getPdfUrl() {
+        return pdfUrl;
+    }
+
+    public void setPdfUrl(String pdfUrl) {
+        this.pdfUrl = pdfUrl;
+    }
+
+    public String getPdfTitle() {
+        return pdfTitle;
+    }
+
+    public void setPdfTitle(String pdfTitle) {
+        this.pdfTitle = pdfTitle;
+    }
+
+    public Long getPdfSize() {
+        return pdfSize;
+    }
+
+    public void setPdfSize(Long pdfSize) {
+        this.pdfSize = pdfSize;
     }
 
     public List<Video> getVideos() {

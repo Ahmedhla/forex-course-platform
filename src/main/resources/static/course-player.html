@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Course Player - Forex Academy</title>
   <style>
     * {
@@ -14,17 +14,15 @@
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background: #f5f5f5;
     }
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 20px;
-    }
-
-    /* Navbar */
     .navbar {
       background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
       color: white;
       padding: 1rem 0;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
     }
     .navbar .container {
       display: flex;
@@ -35,79 +33,11 @@
       font-size: 1.5rem;
       font-weight: bold;
     }
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 2rem;
-    }
     .nav-links a {
       color: white;
       text-decoration: none;
+      margin-left: 2rem;
     }
-    .nav-links a:hover {
-      color: #ffd700;
-    }
-
-    /* Hamburger */
-    .hamburger {
-      display: none;
-      flex-direction: column;
-      cursor: pointer;
-      background: none;
-      border: none;
-      padding: 10px;
-    }
-    .hamburger span {
-      width: 25px;
-      height: 3px;
-      background: white;
-      margin: 3px 0;
-      transition: 0.3s;
-      border-radius: 2px;
-    }
-    .hamburger.active span:nth-child(1) {
-      transform: rotate(45deg) translate(6px, 6px);
-    }
-    .hamburger.active span:nth-child(2) {
-      opacity: 0;
-    }
-    .hamburger.active span:nth-child(3) {
-      transform: rotate(-45deg) translate(6px, -6px);
-    }
-
-    /* Mobile Menu */
-    .mobile-menu {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.95);
-      z-index: 999;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      gap: 30px;
-    }
-    .mobile-menu a {
-      color: white;
-      text-decoration: none;
-      font-size: 1.5rem;
-      padding: 15px;
-    }
-    .close-menu {
-      position: absolute;
-      top: 20px;
-      right: 30px;
-      font-size: 40px;
-      color: white;
-      cursor: pointer;
-      background: none;
-      border: none;
-    }
-
-    /* Player */
     .player-container {
       display: flex;
       max-width: 1400px;
@@ -186,16 +116,19 @@
       padding: 40px;
       color: #666;
     }
-
+    .pdf-material {
+      margin-top: 20px;
+      padding: 20px;
+      background: #f8f9fa;
+      border-radius: 10px;
+      display: none;
+    }
     @media (max-width: 768px) {
-      .nav-links {
-        display: none;
-      }
-      .hamburger {
-        display: flex;
-      }
       .player-container {
         flex-direction: column;
+      }
+      .nav-links a {
+        margin-left: 1rem;
       }
     }
   </style>
@@ -209,18 +142,8 @@
       <a href="index.html">Home</a>
       <a href="#" id="logoutBtn">Logout</a>
     </div>
-    <button class="hamburger" id="hamburgerBtn">
-      <span></span><span></span><span></span>
-    </button>
   </div>
 </nav>
-
-<div class="mobile-menu" id="mobileMenu">
-  <button class="close-menu" id="closeMenuBtn">&times;</button>
-  <a href="dashboard.html">My Courses</a>
-  <a href="index.html">Home</a>
-  <a href="#" id="mobileLogoutBtn">Logout</a>
-</div>
 
 <div class="player-container">
   <div class="video-section">
@@ -228,6 +151,12 @@
       <iframe id="youtubePlayer" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
     </div>
     <div class="video-info" id="videoInfo"><div class="loading">Loading video...</div></div>
+
+    <!-- PDF Material Section -->
+    <div id="pdfMaterial" class="pdf-material">
+      <h3>📚 Course Materials</h3>
+      <div id="pdfContent"></div>
+    </div>
   </div>
   <div class="playlist-section">
     <h3>Course Content</h3>
@@ -241,42 +170,10 @@
 
   if (!token) window.location.href = 'index.html';
 
-  // Hamburger menu
-  const hamburgerBtn = document.getElementById('hamburgerBtn');
-  const mobileMenu = document.getElementById('mobileMenu');
-  const closeMenuBtn = document.getElementById('closeMenuBtn');
-
-  function closeMobileMenu() {
-    if (hamburgerBtn) hamburgerBtn.classList.remove('active');
-    if (mobileMenu) mobileMenu.style.display = 'none';
-    document.body.style.overflow = 'auto';
-  }
-
-  function openMobileMenu() {
-    if (hamburgerBtn) hamburgerBtn.classList.add('active');
-    if (mobileMenu) mobileMenu.style.display = 'flex';
-    document.body.style.overflow = 'hidden';
-  }
-
-  if (hamburgerBtn) hamburgerBtn.addEventListener('click', openMobileMenu);
-  if (closeMenuBtn) closeMenuBtn.addEventListener('click', closeMobileMenu);
-  if (mobileMenu) {
-    mobileMenu.addEventListener('click', (e) => {
-      if (e.target === mobileMenu) closeMobileMenu();
-    });
-    mobileMenu.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', closeMobileMenu);
-    });
-  }
-
-  function logout() {
+  document.getElementById('logoutBtn').onclick = () => {
     localStorage.clear();
     window.location.href = 'index.html';
-  }
-
-  document.getElementById('logoutBtn').onclick = logout;
-  const mobileLogoutBtn = document.getElementById('mobileLogoutBtn');
-  if (mobileLogoutBtn) mobileLogoutBtn.onclick = logout;
+  };
 
   const urlParams = new URLSearchParams(window.location.search);
   const courseId = urlParams.get('courseId');
@@ -305,6 +202,13 @@
     return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
   }
 
+  function escapeHtml(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
   async function loadCourse() {
     try {
       const videosResponse = await fetch(`${API_BASE}/courses/${courseId}/videos`, {
@@ -312,14 +216,13 @@
       });
       if (!videosResponse.ok) throw new Error('Failed to load videos');
       videos = await videosResponse.json();
-
       if (!videos || videos.length === 0) {
         document.getElementById('playlist').innerHTML = '<div class="loading">No videos in this course.</div>';
         return;
       }
-
       loadPlaylist();
       loadVideo(0);
+      await loadPdfMaterial();
     } catch (error) {
       console.error('Error:', error);
     }
@@ -338,30 +241,43 @@
             `).join('');
   }
 
-  function escapeHtml(text) {
-    if (!text) return '';
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-  }
-
   function loadVideo(index) {
     const video = videos[index];
     if (!video || !video.videoUrl) return;
-
     const youtubeId = extractYouTubeId(video.videoUrl);
     const embedUrl = `https://www.youtube.com/embed/${youtubeId}?enablejsapi=1`;
     document.getElementById('youtubePlayer').src = embedUrl;
-
     document.getElementById('videoInfo').innerHTML = `
                 <h2>${escapeHtml(video.title)}</h2>
                 <p>${escapeHtml(video.description) || 'No description'}</p>
                 <div style="background:#667eea; color:white; padding:5px 10px; border-radius:5px; display:inline-block;">⏱️ ${formatDuration(video.duration)}</div>
             `;
-
     document.querySelectorAll('.playlist-item').forEach((item, i) => {
       item.classList.toggle('active', i === index);
     });
+  }
+
+  async function loadPdfMaterial() {
+    try {
+      const response = await fetch(`${API_BASE}/courses/public/${courseId}`);
+      const course = await response.json();
+      if (course.pdfUrl && course.pdfUrl !== '') {
+        const pdfDiv = document.getElementById('pdfMaterial');
+        const pdfContent = document.getElementById('pdfContent');
+        const fileSizeMB = course.pdfSize ? (course.pdfSize / 1024 / 1024).toFixed(2) : '';
+        pdfContent.innerHTML = `
+                        <div style="background: white; padding: 15px; border-radius: 10px; border-left: 4px solid #ffc107;">
+                            <strong>📖 ${escapeHtml(course.pdfTitle || 'Course Material')}</strong><br>
+                            <small>PDF Document ${fileSizeMB ? `(${fileSizeMB} MB)` : ''}</small>
+                            <p style="margin: 10px 0;">Download this PDF guide to follow along with the course.</p>
+                            <a href="${course.pdfUrl}" target="_blank" class="btn-secondary" style="display: inline-block; padding: 8px 20px; background: #28a745; text-decoration: none; color: white; border-radius: 5px;">📥 Download PDF</a>
+                        </div>
+                    `;
+        pdfDiv.style.display = 'block';
+      }
+    } catch (error) {
+      console.error('Error loading PDF:', error);
+    }
   }
 
   loadCourse();

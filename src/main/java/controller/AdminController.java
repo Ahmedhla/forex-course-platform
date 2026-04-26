@@ -48,12 +48,10 @@ public class AdminController {
     // COURSE MANAGEMENT
     // ============================================
 
-    // Create a new course (free by default)
     @PostMapping("/courses")
     public ResponseEntity<Map<String, Object>> createCourse(@RequestBody Course course) {
         try {
             course.setPrice(0.0);
-
             Course savedCourse = courseRepository.save(course);
             Map<String, Object> response = new HashMap<>();
             response.put("success", true);
@@ -70,21 +68,32 @@ public class AdminController {
         }
     }
 
-    // Get all courses
     @GetMapping("/courses")
     public ResponseEntity<?> getAllCourses() {
         return ResponseEntity.ok(courseRepository.findAll());
     }
 
-    // Get a specific course with videos
     @GetMapping("/courses/{id}")
     public ResponseEntity<?> getCourse(@PathVariable Long id) {
-        return courseRepository.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        Course course = courseRepository.findById(id).orElse(null);
+        if (course == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("id", course.getId());
+        response.put("title", course.getTitle());
+        response.put("description", course.getDescription());
+        response.put("price", course.getPrice());
+        response.put("thumbnailUrl", course.getThumbnailUrl());
+        response.put("videos", course.getVideos());
+        response.put("pdfUrl", course.getPdfUrl());
+        response.put("pdfTitle", course.getPdfTitle());
+        response.put("pdfSize", course.getPdfSize());
+
+        return ResponseEntity.ok(response);
     }
 
-    // Update an existing course
     @PutMapping("/courses/{id}")
     public ResponseEntity<?> updateCourse(@PathVariable Long id, @RequestBody Course courseDetails) {
         try {
@@ -92,16 +101,13 @@ public class AdminController {
             if (course == null) {
                 return ResponseEntity.notFound().build();
             }
-
             course.setTitle(courseDetails.getTitle());
             course.setDescription(courseDetails.getDescription());
             course.setPrice(0.0);
             if (courseDetails.getThumbnailUrl() != null) {
                 course.setThumbnailUrl(courseDetails.getThumbnailUrl());
             }
-
             Course updatedCourse = courseRepository.save(course);
-            System.out.println("✅ Course updated: " + updatedCourse.getTitle());
             return ResponseEntity.ok(updatedCourse);
         } catch (Exception e) {
             Map<String, String> error = new HashMap<>();
@@ -110,7 +116,6 @@ public class AdminController {
         }
     }
 
-    // Delete a course (and all its videos)
     @Transactional
     @DeleteMapping("/courses/{id}")
     public ResponseEntity<?> deleteCourse(@PathVariable Long id) {
@@ -119,22 +124,17 @@ public class AdminController {
             if (course == null) {
                 return ResponseEntity.notFound().build();
             }
-
             if (course.getVideos() != null && !course.getVideos().isEmpty()) {
                 ArrayList<Video> videosToDelete = new ArrayList<>(course.getVideos());
                 for (Video video : videosToDelete) {
                     videoRepository.delete(video);
                 }
             }
-
             courseRepository.delete(course);
-            System.out.println("✅ Course deleted: " + id);
-
             Map<String, Object> response = new HashMap<>();
             response.put("success", true);
             response.put("message", "Course deleted successfully");
             return ResponseEntity.ok(response);
-
         } catch (Exception e) {
             Map<String, String> error = new HashMap<>();
             error.put("error", e.getMessage());
@@ -146,7 +146,6 @@ public class AdminController {
     // VIDEO MANAGEMENT
     // ============================================
 
-    // Add YouTube video to a course
     @PostMapping("/courses/{courseId}/videos")
     public ResponseEntity<?> addVideo(@PathVariable Long courseId, @RequestBody Video video) {
         try {
@@ -154,17 +153,9 @@ public class AdminController {
             if (course == null) {
                 return ResponseEntity.notFound().build();
             }
-
-            System.out.println("📹 Adding YouTube video to course: " + course.getTitle());
-            System.out.println("   Video title: " + video.getTitle());
-            System.out.println("   YouTube URL/ID: " + video.getVideoUrl());
-
             video.setCourse(course);
             video.setOrderNumber(course.getVideos().size() + 1);
-
             Video savedVideo = videoRepository.save(video);
-            System.out.println("   ✅ YouTube video saved with ID: " + savedVideo.getId());
-
             return ResponseEntity.ok(savedVideo);
         } catch (Exception e) {
             Map<String, String> error = new HashMap<>();
@@ -173,7 +164,6 @@ public class AdminController {
         }
     }
 
-    // Delete a video
     @DeleteMapping("/videos/{videoId}")
     public ResponseEntity<?> deleteVideo(@PathVariable Long videoId) {
         try {
@@ -181,15 +171,11 @@ public class AdminController {
             if (video == null) {
                 return ResponseEntity.notFound().build();
             }
-
             videoRepository.delete(video);
-            System.out.println("✅ Video deleted: " + videoId);
-
             Map<String, Object> response = new HashMap<>();
             response.put("success", true);
             response.put("message", "Video deleted successfully");
             return ResponseEntity.ok(response);
-
         } catch (Exception e) {
             Map<String, String> error = new HashMap<>();
             error.put("error", e.getMessage());
@@ -198,10 +184,98 @@ public class AdminController {
     }
 
     // ============================================
+    // PDF MATERIAL MANAGEMENT
+    // ============================================
+
+    @PostMapping("/courses/{courseId}/upload-pdf")
+    public ResponseEntity<?> uploadCoursePdf(
+            @PathVariable Long courseId,
+            @RequestParam("file") MultipartFile file) {
+        try {
+            Course course = courseRepository.findById(courseId).orElse(null);
+            if (course == null) {
+                return ResponseEntity.notFound().build();
+            }
+
+            String contentType = file.getContentType();
+            if (contentType == null || !contentType.equals("application/pdf")) {
+                return ResponseEntity.badRequest().body(Map.of("error", "Only PDF files are allowed"));
+            }
+
+            File pdfDirectory = new File("./uploads/pdfs/");
+            if (!pdfDirectory.exists()) {
+                pdfDirectory.mkdirs();
+            }
+
+            String originalFilename = file.getOriginalFilename();
+            String filename = UUID.randomUUID().toString() + "_" + originalFilename;
+            String filePath = "./uploads/pdfs/" + filename;
+            Files.write(Paths.get(filePath), file.getBytes());
+
+            String pdfUrl = "/uploads/pdfs/" + filename;
+            String pdfTitle = originalFilename.replace(".pdf", "");
+
+            course.setPdfUrl(pdfUrl);
+            course.setPdfTitle(pdfTitle);
+            course.setPdfSize(file.getSize());
+            courseRepository.save(course);
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("pdfUrl", pdfUrl);
+            response.put("pdfTitle", pdfTitle);
+            response.put("pdfSize", file.getSize());
+            return ResponseEntity.ok(response);
+
+        } catch (IOException e) {
+            return ResponseEntity.status(500).body(Map.of("error", e.getMessage()));
+        }
+    }
+
+    @DeleteMapping("/courses/{courseId}/delete-pdf")
+    public ResponseEntity<?> deleteCoursePdf(@PathVariable Long courseId) {
+        try {
+            Course course = courseRepository.findById(courseId).orElse(null);
+            if (course == null || course.getPdfUrl() == null) {
+                return ResponseEntity.notFound().build();
+            }
+
+            String filePath = "." + course.getPdfUrl();
+            File pdfFile = new File(filePath);
+            if (pdfFile.exists()) {
+                pdfFile.delete();
+            }
+
+            course.setPdfUrl(null);
+            course.setPdfTitle(null);
+            course.setPdfSize(null);
+            courseRepository.save(course);
+
+            return ResponseEntity.ok(Map.of("success", true, "message", "PDF deleted successfully"));
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(Map.of("error", e.getMessage()));
+        }
+    }
+
+    @GetMapping("/courses/{courseId}/pdf-info")
+    public ResponseEntity<?> getCoursePdfInfo(@PathVariable Long courseId) {
+        Course course = courseRepository.findById(courseId).orElse(null);
+        if (course == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("hasPdf", course.getPdfUrl() != null);
+        response.put("pdfUrl", course.getPdfUrl());
+        response.put("pdfTitle", course.getPdfTitle());
+        response.put("pdfSize", course.getPdfSize());
+        return ResponseEntity.ok(response);
+    }
+
+    // ============================================
     // FILE UPLOADS
     // ============================================
 
-    // Upload thumbnail image
     @PostMapping("/upload/thumbnail")
     public ResponseEntity<?> uploadThumbnail(@RequestParam("file") MultipartFile file) {
         try {
@@ -209,43 +283,29 @@ public class AdminController {
             if (!directory.exists()) {
                 directory.mkdirs();
             }
-
             String originalFilename = file.getOriginalFilename();
             String extension = "";
             if (originalFilename != null && originalFilename.contains(".")) {
                 extension = originalFilename.substring(originalFilename.lastIndexOf("."));
             }
             String filename = UUID.randomUUID().toString() + extension;
-
             Path path = Paths.get(thumbnailUploadPath + filename);
             Files.write(path, file.getBytes());
-
             String thumbnailUrl = "/uploads/thumbnails/" + filename;
-            System.out.println("✅ Thumbnail saved: " + thumbnailUrl);
-
-            Map<String, Object> response = new HashMap<>();
-            response.put("success", true);
-            response.put("thumbnailUrl", thumbnailUrl);
-            return ResponseEntity.ok(response);
-
+            return ResponseEntity.ok(Map.of("success", true, "thumbnailUrl", thumbnailUrl));
         } catch (IOException e) {
-            Map<String, String> error = new HashMap<>();
-            error.put("error", e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", e.getMessage()));
         }
     }
 
     // ============================================
-    // USER MANAGEMENT (for manage-users.html)
+    // USER MANAGEMENT
     // ============================================
 
-    // Get all users (admin only)
     @GetMapping("/users")
     public ResponseEntity<?> getAllUsers() {
         try {
             List<User> users = userRepository.findAll();
-
-            // Remove passwords from response for security
             List<Map<String, Object>> safeUsers = new ArrayList<>();
             for (User user : users) {
                 Map<String, Object> safeUser = new HashMap<>();
@@ -256,41 +316,12 @@ public class AdminController {
                 safeUser.put("createdAt", user.getCreatedAt());
                 safeUsers.add(safeUser);
             }
-
             return ResponseEntity.ok(safeUsers);
         } catch (Exception e) {
-            System.err.println("❌ Error fetching users: " + e.getMessage());
-            Map<String, String> error = new HashMap<>();
-            error.put("error", e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", e.getMessage()));
         }
     }
 
-    // Get a single user by ID
-    @GetMapping("/users/{userId}")
-    public ResponseEntity<?> getUserById(@PathVariable Long userId) {
-        try {
-            User user = userRepository.findById(userId).orElse(null);
-            if (user == null) {
-                return ResponseEntity.notFound().build();
-            }
-
-            Map<String, Object> safeUser = new HashMap<>();
-            safeUser.put("id", user.getId());
-            safeUser.put("email", user.getEmail());
-            safeUser.put("fullName", user.getFullName());
-            safeUser.put("role", user.getRole());
-            safeUser.put("createdAt", user.getCreatedAt());
-
-            return ResponseEntity.ok(safeUser);
-        } catch (Exception e) {
-            Map<String, String> error = new HashMap<>();
-            error.put("error", e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
-        }
-    }
-
-    // Make a user admin
     @PutMapping("/users/{userId}/make-admin")
     public ResponseEntity<?> makeAdmin(@PathVariable Long userId) {
         try {
@@ -298,24 +329,14 @@ public class AdminController {
             if (user == null) {
                 return ResponseEntity.notFound().build();
             }
-
             user.setRole("ADMIN");
             userRepository.save(user);
-
-            System.out.println("✅ User " + user.getEmail() + " is now an ADMIN");
-
-            Map<String, Object> response = new HashMap<>();
-            response.put("success", true);
-            response.put("message", "User is now an admin");
-            return ResponseEntity.ok(response);
+            return ResponseEntity.ok(Map.of("success", true, "message", "User is now an admin"));
         } catch (Exception e) {
-            Map<String, String> error = new HashMap<>();
-            error.put("error", e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", e.getMessage()));
         }
     }
 
-    // Remove admin role (make user a student)
     @PutMapping("/users/{userId}/remove-admin")
     public ResponseEntity<?> removeAdmin(@PathVariable Long userId) {
         try {
@@ -323,74 +344,11 @@ public class AdminController {
             if (user == null) {
                 return ResponseEntity.notFound().build();
             }
-
             user.setRole("STUDENT");
             userRepository.save(user);
-
-            System.out.println("✅ Admin role removed from: " + user.getEmail());
-
-            Map<String, Object> response = new HashMap<>();
-            response.put("success", true);
-            response.put("message", "Admin role removed");
-            return ResponseEntity.ok(response);
+            return ResponseEntity.ok(Map.of("success", true, "message", "Admin role removed"));
         } catch (Exception e) {
-            Map<String, String> error = new HashMap<>();
-            error.put("error", e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
-        }
-    }
-
-    // Delete a user
-    @DeleteMapping("/users/{userId}")
-    public ResponseEntity<?> deleteUser(@PathVariable Long userId) {
-        try {
-            User user = userRepository.findById(userId).orElse(null);
-            if (user == null) {
-                return ResponseEntity.notFound().build();
-            }
-
-            // Prevent deleting the last admin
-            long adminCount = userRepository.findAll().stream().filter(u -> "ADMIN".equals(u.getRole())).count();
-            if ("ADMIN".equals(user.getRole()) && adminCount <= 1) {
-                Map<String, String> error = new HashMap<>();
-                error.put("error", "Cannot delete the last admin user");
-                return ResponseEntity.badRequest().body(error);
-            }
-
-            userRepository.delete(user);
-            System.out.println("✅ User deleted: " + user.getEmail());
-
-            Map<String, Object> response = new HashMap<>();
-            response.put("success", true);
-            response.put("message", "User deleted successfully");
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            Map<String, String> error = new HashMap<>();
-            error.put("error", e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
-        }
-    }
-
-    // Get user statistics
-    @GetMapping("/users/stats")
-    public ResponseEntity<?> getUserStats() {
-        try {
-            List<User> users = userRepository.findAll();
-
-            long totalUsers = users.size();
-            long adminCount = users.stream().filter(u -> "ADMIN".equals(u.getRole())).count();
-            long studentCount = users.stream().filter(u -> "STUDENT".equals(u.getRole())).count();
-
-            Map<String, Object> stats = new HashMap<>();
-            stats.put("totalUsers", totalUsers);
-            stats.put("adminCount", adminCount);
-            stats.put("studentCount", studentCount);
-
-            return ResponseEntity.ok(stats);
-        } catch (Exception e) {
-            Map<String, String> error = new HashMap<>();
-            error.put("error", e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", e.getMessage()));
         }
     }
 }
