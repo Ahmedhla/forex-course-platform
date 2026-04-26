@@ -15,7 +15,7 @@
     <artifactId>forex-course-platform</artifactId>
     <version>1.0.0</version>
     <name>Forex Course Platform</name>
-    <description>Forex Trading Course Platform with YouTube Videos</description>
+    <description>Forex Trading Course Platform with YouTube Videos and PDF Materials</description>
 
     <properties>
         <java.version>17</java.version>
@@ -43,7 +43,7 @@
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
 
-        <!-- Email Starter -->
+        <!-- Mail Starter - Required for JavaMailSender -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-mail</artifactId>

@@ -39,7 +39,8 @@ public class EmailService {
                             "If you did not request this password reset, please ignore this email.\n\n" +
                             "For security reasons, do not share this link with anyone.\n\n" +
                             "Best regards,\n" +
-                            "Forex Academy Team"
+                            "Forex Academy Team\n" +
+                            "asmursa@gmail.com"
             );
             message.setFrom(fromEmail);
 
@@ -71,7 +72,7 @@ public class EmailService {
                             "Welcome to Forex Academy! We're excited to have you on board.\n\n" +
                             "You can now access all our free forex trading courses.\n\n" +
                             "Get started by visiting our website and exploring our courses.\n\n" +
-                            "If you have any questions, feel free to contact us at support@forexacademy.com.\n\n" +
+                            "If you have any questions, feel free to contact us at asmursa@gmail.com.\n\n" +
                             "Happy trading!\n\n" +
                             "Best regards,\n" +
                             "Forex Academy Team"
@@ -102,7 +103,8 @@ public class EmailService {
                             "This is a test email from your Forex Academy platform.\n\n" +
                             "If you received this, your email system is configured correctly!\n\n" +
                             "Best regards,\n" +
-                            "Forex Academy Team"
+                            "Forex Academy Team\n" +
+                            "asmursa@gmail.com"
             );
             message.setFrom(fromEmail);
 
